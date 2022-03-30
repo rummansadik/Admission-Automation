@@ -1,5 +1,8 @@
+
 {% extends 'student/studentbase.html' %}
 {% load widget_tweaks %}
+{% load static %}
+
 {% block content %}
 
 
@@ -67,10 +70,13 @@
       right: 0px;
     }
     </style>
-  </head>
-<br><br>
+</head>
 
   <div class="container">
+    <div class="row">
+      {% include 'student/profile.html' %}
+    </div>
+    <br>
     <div class="row">
       
   
@@ -92,6 +98,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 
