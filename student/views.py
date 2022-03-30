@@ -45,6 +45,7 @@ def get_student(user):
 def student_dashboard_view(request):
     current_student = get_student(request.user)
     # print("current - ", current_student.pk)
+    print("pics --- ", current_student.profile_pic.url)
     dict = {
         'student': current_student,
         'total_course': QMODEL.Course.objects.all().count(),
