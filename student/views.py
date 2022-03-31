@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render, reverse
 from exam import models as QMODEL
 
 from . import forms, models
+from datetime import datetime
 
 # for showing signup/login button for student
 def studentclick_view(request):
@@ -57,8 +58,29 @@ def student_dashboard_view(request):
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
 def student_exam_view(request):
+    time = datetime.now()
     courses = QMODEL.Course.objects.all()
-    return render(request, 'student/student_exam.html', {'courses': courses})
+    
+    past_courses = []
+    running_courses = []
+    upcomming_courses = []
+
+    for course in courses:
+        print(course.start_at(), course.end_at(), time)
+        if course.end_at() < time:
+            past_courses.append(course)
+        elif course.start_at() > time:
+            upcomming_courses.append(course)
+        else:
+            running_courses.append(course)
+
+    context = {
+        'past_courses' : past_courses,
+        'running_courses' : running_courses,
+        'upcomming_courses' : upcomming_courses
+    }
+
+    return render(request, 'student/student_exam.html', context)
 
 
 @login_required(login_url='studentlogin')
