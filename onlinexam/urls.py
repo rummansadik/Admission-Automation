@@ -4,21 +4,14 @@ from django.urls import include, path
 from exam import views
 
 urlpatterns = [
-
+    path('', views.home_view, name=''),
     path('admin/', admin.site.urls),
     path('teacher/', include('teacher.urls')),
     path('student/', include('student.urls')),
-
-
-
-    path('', views.home_view, name=''),
     path('logout', LogoutView.as_view(
         template_name='exam/logout.html'), name='logout'),
     path('contactus', views.contactus_view),
     path('afterlogin', views.afterlogin_view, name='afterlogin'),
-
-
-
     path('adminclick', views.adminclick_view),
     path('adminlogin', LoginView.as_view(
         template_name='exam/adminlogin.html'), name='adminlogin'),
@@ -38,7 +31,6 @@ urlpatterns = [
          views.approve_teacher_view, name='approve-teacher'),
     path('reject-teacher/<int:pk>',
          views.reject_teacher_view, name='reject-teacher'),
-
     path('admin-student', views.admin_student_view, name='admin-student'),
     path('admin-view-student', views.admin_view_student_view,
          name='admin-view-student'),
@@ -52,13 +44,11 @@ urlpatterns = [
          views.update_student_view, name='update-student'),
     path('delete-student/<int:pk>',
          views.delete_student_view, name='delete-student'),
-
     path('admin-course', views.admin_course_view, name='admin-course'),
     path('admin-add-course', views.admin_add_course_view, name='admin-add-course'),
     path('admin-view-course', views.admin_view_course_view,
          name='admin-view-course'),
     path('delete-course/<int:pk>', views.delete_course_view, name='delete-course'),
-
     path('admin-question', views.admin_question_view, name='admin-question'),
     path('admin-add-question', views.admin_add_question_view,
          name='admin-add-question'),
@@ -67,6 +57,4 @@ urlpatterns = [
     path('view-question/<int:pk>', views.view_question_view, name='view-question'),
     path('delete-question/<int:pk>',
          views.delete_question_view, name='delete-question'),
-
-
 ]
