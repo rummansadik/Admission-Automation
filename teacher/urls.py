@@ -2,6 +2,8 @@ from django.contrib.auth.views import LoginView
 from django.urls import path
 
 from teacher import views
+from exam import views as exam_view
+
 
 urlpatterns = [
     path('teacherclick', views.teacherclick_view),
@@ -11,7 +13,7 @@ urlpatterns = [
     path('teacher-dashboard', views.teacher_dashboard_view,
          name='teacher-dashboard'),
     path('teacher-exam', views.teacher_exam_view, name='teacher-exam'),
-    path('teacher-add-exam', views.teacher_add_exam_view, name='teacher-add-exam'),
+    path('teacher-add-exam', exam_view.admin_add_course_view, name='teacher-add-exam'),
     path('teacher-view-exam', views.teacher_view_exam_view,
          name='teacher-view-exam'),
     path('delete-exam/<int:pk>', views.delete_exam_view, name='delete-exam'),
@@ -24,3 +26,4 @@ urlpatterns = [
     path('remove-question/<int:pk>',
          views.remove_question_view, name='remove-question'),
 ]
+
