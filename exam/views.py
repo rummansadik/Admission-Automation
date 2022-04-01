@@ -188,6 +188,9 @@ def delete_student_view(request, pk):
 def admin_course_view(request):
     return render(request, 'exam/admin_course.html')
 
+@login_required(login_url='adminlogin')
+def admin_university_view(request):
+    return render(request, 'exam/admin_university.html')
 
 @login_required(login_url='adminlogin')
 def admin_add_course_view(request):
