@@ -14,7 +14,10 @@
     background: linear-gradient(to right, #d7d2cc, #304352); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 }
-
+.content{
+      margin-bottom: 0px !important;
+      height: 603px;
+    }
 .box {
     width: 500px;
     padding: 40px;
@@ -79,7 +82,7 @@
   </head>
   <body>
     {% include "exam/navbar.html" %}
-    <div class="container">
+    <div class="container content">
     <div class="row">
         <div class="col-md-6">
             <div class="card">
@@ -97,9 +100,6 @@
         </div>
     </div>
 </div>
-<br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br>
 {% include "exam/footer.html" %}
   </body>
 </html>
