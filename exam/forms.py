@@ -1,4 +1,3 @@
-from re import sub
 from django import forms
 
 from . import models
@@ -19,6 +18,16 @@ class UniversityForm(forms.Form):
         choices=subject_choices,
         widget=forms.CheckboxSelectMultiple()
     )
+
+# class UniversityForm(forms.Form):
+#     class Meta:
+#         model = models.University
+#         fields = '__all__'
+#         widgets = {
+#             'subjects': forms.MultipleChoiceField(
+#                 choices=subject_choices
+#             )
+#         }
 
 
 class ContactusForm(forms.Form):

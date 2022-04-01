@@ -1,5 +1,5 @@
-from django.contrib import messages
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
@@ -214,6 +214,10 @@ def admin_add_university_view(request):
     if request.method == 'POST':
         universityForm = forms.UniversityForm(request.POST)
         if universityForm.is_valid():
+            models.University.objects.create(
+                university_name=universityForm.cleaned_data['university_name'],
+                subjects=list(universityForm.cleaned_data['subjects'])
+            )
             messages.success(request, "University Added")
         else:
             print("form is invalid")
