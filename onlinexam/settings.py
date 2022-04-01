@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'teacher',
     'student',
     'widget_tweaks',
-
 ]
 
 MIDDLEWARE = [
@@ -55,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 CSRF_COOKIE_SECURE = False
 ROOT_URLCONF = 'onlinexam.urls'
 
@@ -146,3 +146,11 @@ EMAIL_HOST_PASSWORD = 'ENTER_PASSWORD'  # host email password required
 # this process is required because google blocks apps authentication by default
 # email on which you will receive messages sent from website
 EMAIL_RECEIVING_USER = ['to@gmail.com']
+
+# Django-Resized
+DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]
+DJANGORESIZED_DEFAULT_QUALITY = 100
+DJANGORESIZED_DEFAULT_KEEP_META = True
+DJANGORESIZED_DEFAULT_FORCE_FORMAT = 'JPEG'
+DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg"}
+DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = False
