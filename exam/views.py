@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -188,9 +189,11 @@ def delete_student_view(request, pk):
 def admin_course_view(request):
     return render(request, 'exam/admin_course.html')
 
+
 @login_required(login_url='adminlogin')
 def admin_university_view(request):
     return render(request, 'exam/admin_university.html')
+
 
 @login_required(login_url='adminlogin')
 def admin_add_course_view(request):
@@ -206,9 +209,28 @@ def admin_add_course_view(request):
 
 
 @login_required(login_url='adminlogin')
+def admin_add_university_view(request):
+    universityForm = forms.UniversityForm()
+    if request.method == 'POST':
+        universityForm = forms.UniversityForm(request.POST)
+        if universityForm.is_valid():
+            messages.success(request, "University Added")
+        else:
+            print("form is invalid")
+        return HttpResponseRedirect('/admin-view-university')
+    return render(request, 'exam/admin_add_university.html', {'universityForm': universityForm})
+
+
+@login_required(login_url='adminlogin')
 def admin_view_course_view(request):
     courses = models.Course.objects.all()
     return render(request, 'exam/admin_view_course.html', {'courses': courses})
+
+
+@login_required(login_url='adminlogin')
+def admin_view_university_view(request):
+    universities = models.University.objects.all()
+    return render(request, 'exam/admin_view_university.html', {'universities': universities})
 
 
 @login_required(login_url='adminlogin')
@@ -216,6 +238,13 @@ def delete_course_view(request, pk):
     course = models.Course.objects.get(id=pk)
     course.delete()
     return HttpResponseRedirect('/admin-view-course')
+
+
+@login_required(login_url='adminlogin')
+def delete_university_view(request, pk):
+    university = models.University.objects.get(id=pk)
+    university.delete()
+    return HttpResponseRedirect('/admin-view-university')
 
 
 @login_required(login_url='adminlogin')

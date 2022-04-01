@@ -2,6 +2,29 @@ from django.db import models
 from student.models import Student
 
 from datetime import datetime
+from multiselectfield import MultiSelectField
+
+# class Subjects(models.Model):
+#     name = models.CharField(max_length=50)
+
+subject_choices = (
+    ('CSE', 'CSE'),
+    ('ECE', 'ECE'),
+    ('EEE', 'EEE'),
+    ('BBA', 'BBA'),
+    ('English', 'English'),
+    ('Math', 'Math'),
+    ('Bangla', 'Bangla'),
+)
+
+class University(models.Model):
+    university_name = models.CharField(max_length=100)
+    subjects = MultiSelectField(
+        max_length = 100,
+        max_choices = 7,
+        choices = subject_choices
+    )
+
 
 class Course(models.Model):
     course_name = models.CharField(max_length=50)

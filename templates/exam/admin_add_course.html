@@ -1,6 +1,7 @@
 {% extends 'exam/adminbase.html' %}
 {% load widget_tweaks %}
 {% block content %}
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -12,6 +13,7 @@
       }
     </style>
 </head>
+
 <h2 style="text-align:center;">Add Course</h2>
 <form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
     {%csrf_token%}
@@ -57,4 +59,5 @@
     <button type="submit" class="btn btn-success" style="border-radius:0px;">Add Course Info</button>
   </form>
 <br><br><br>
+
 {% endblock content %}

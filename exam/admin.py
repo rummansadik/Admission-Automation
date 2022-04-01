@@ -7,3 +7,4 @@ from .models import *
 admin.site.register(Course)
 admin.site.register(Question)
 admin.site.register(Result)
+admin.site.register(University)

@@ -1,6 +1,24 @@
+from re import sub
 from django import forms
 
 from . import models
+
+subject_choices = (
+    ('CSE', 'CSE'),
+    ('ECE', 'ECE'),
+    ('EEE', 'EEE'),
+    ('BBA', 'BBA'),
+    ('English', 'English'),
+    ('Math', 'Math'),
+    ('Bangla', 'Bangla'),
+)
+
+class UniversityForm(forms.Form):
+    university_name = forms.CharField(max_length=100)
+    subjects = forms.MultipleChoiceField(
+        choices=subject_choices,
+        widget=forms.CheckboxSelectMultiple()
+    )
 
 
 class ContactusForm(forms.Form):
