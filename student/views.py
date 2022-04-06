@@ -3,8 +3,11 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
+from django.http.response import StreamingHttpResponse
 from django.shortcuts import redirect, render, reverse
 from exam import models as QMODEL
+
+from student.camera import *
 
 from . import forms, models
 
@@ -111,7 +114,7 @@ def take_exam_view(request, pk):
 def start_exam_view(request, pk):
     course = QMODEL.Course.objects.get(id=pk)
     questions = QMODEL.Question.objects.all().filter(course=course)
-    
+
     if request.method == 'POST':
         pass
 
@@ -172,3 +175,29 @@ def check_marks_view(request, pk):
 def student_marks_view(request):
     courses = QMODEL.Course.objects.all()
     return render(request, 'student/student_marks.html', {'courses': courses})
+
+
+def gen(camera):
+	while True:
+		frame = camera.get_frame()
+		yield (b'--frame\r\n'
+				b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+
+
+def video_feed(request):
+	return StreamingHttpResponse(gen(VideoCamera()),
+					content_type='multipart/x-mixed-replace; boundary=frame')
+
+
+def webcam_feed(request):
+	return StreamingHttpResponse(gen(IPWebCam()),
+					content_type='multipart/x-mixed-replace; boundary=frame')
+
+
+def mask_feed(request):
+	return StreamingHttpResponse(gen(MaskDetect()),
+					content_type='multipart/x-mixed-replace; boundary=frame')
+					
+def livecam_feed(request):
+	return StreamingHttpResponse(gen(LiveWebCam()),
+					content_type='multipart/x-mixed-replace; boundary=frame')
