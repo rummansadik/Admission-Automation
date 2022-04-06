@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
@@ -5,7 +7,7 @@ from django.shortcuts import redirect, render, reverse
 from exam import models as QMODEL
 
 from . import forms, models
-from datetime import datetime
+
 
 # for showing signup/login button for student
 def studentclick_view(request):
@@ -37,9 +39,11 @@ def student_signup_view(request):
 def is_student(user):
     return user.groups.filter(name='STUDENT').exists()
 
+
 def get_student(user):
     # print("hello ", user.pk)
     return models.Student.objects.get(user_id=user.pk)
+
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
@@ -60,7 +64,7 @@ def student_dashboard_view(request):
 def student_exam_view(request):
     time = datetime.now()
     courses = QMODEL.Course.objects.all()
-    
+
     past_courses = []
     running_courses = []
     upcomming_courses = []
@@ -75,9 +79,9 @@ def student_exam_view(request):
             running_courses.append(course)
 
     context = {
-        'past_courses' : past_courses,
-        'running_courses' : running_courses,
-        'upcomming_courses' : upcomming_courses
+        'past_courses': past_courses,
+        'running_courses': running_courses,
+        'upcomming_courses': upcomming_courses
     }
 
     return render(request, 'student/student_exam.html', context)
@@ -94,8 +98,8 @@ def take_exam_view(request, pk):
         total_marks = total_marks + q.marks
 
     context = {
-        'course': course, 
-        'total_questions': total_questions, 
+        'course': course,
+        'total_questions': total_questions,
         'total_marks': total_marks
     }
 
@@ -107,10 +111,16 @@ def take_exam_view(request, pk):
 def start_exam_view(request, pk):
     course = QMODEL.Course.objects.get(id=pk)
     questions = QMODEL.Question.objects.all().filter(course=course)
+    
     if request.method == 'POST':
         pass
-    response = render(request, 'student/start_exam.html',
-                      {'course': course, 'questions': questions})
+
+    context = {
+        'course': course, 
+        'questions': questions
+    }
+
+    response = render(request, 'student/start_exam.html', context=context)
     response.set_cookie('course_id', course.id)
     return response
 
