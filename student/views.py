@@ -185,8 +185,8 @@ def gen(camera):
 
 
 def video_feed(request):
-	return StreamingHttpResponse(gen(VideoCamera()),
-					content_type='multipart/x-mixed-replace; boundary=frame')
+    return StreamingHttpResponse(gen(VideoCamera(request.user.id)),
+                content_type='multipart/x-mixed-replace; boundary=frame')
 
 
 def webcam_feed(request):

@@ -25,8 +25,9 @@ maskNet = load_model(os.path.join(
 
 
 class VideoCamera(object):
-    def __init__(self):
-        self.video = cv2.VideoCapture(0)
+    def __init__(self, user_id):
+        self.video = cv2.VideoCapture(1)
+        self.user_id = user_id
 
     def __del__(self):
         self.video.release()

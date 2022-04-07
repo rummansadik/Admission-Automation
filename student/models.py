@@ -1,15 +1,15 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+def get_dir(self, filename):
+    return f'profile_pic/Student/{self.user.id}/{filename}'
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     address = models.CharField(max_length=40)
     mobile = models.CharField(max_length=20, null=False)
     profile_pic = models.ImageField(
-        upload_to='profile_pic/Student/', 
-        blank=True, null=True,
-    )
+        upload_to=get_dir, blank=True, null=True)
 
     @property
     def get_name(self):
