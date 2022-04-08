@@ -24,44 +24,44 @@
         <h2 style="text-align: center;">Course Name: {{course.course_name}}</h2>
 
         {% for q in questions%}
-          <h3 class="text-danger">{{ forloop.counter }}. {{q.question}}</h3>
-          <h4 style="text-align: right;">[{{q.marks}} Marks]</h4>
-    
-          <input type="hidden" name="csrfmiddlewaretoken"
-            value="C24rUotmdHawVQJL3KrqiWxvti8UffOFYUc8TRbZtLt36AVLdP3jbkzUVe3beRAa">
-    
-    
-          <div class="form-check mx-4">
-            <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option1}}" value="Option1">
-            <label class="form-check-label" for="option1">
-              {{q.option1}}
-            </label>
-          </div>
-    
-    
-          <div class="form-check mx-4">
-            <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option2}}" value="Option2">
-            <label class="form-check-label" for="option2">
-              {{q.option2}}
-            </label>
-          </div>
-    
-    
-          <div class="form-check mx-4">
-            <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option3}}" value="Option3">
-            <label class="form-check-label" for="option3">
-              {{q.option3}}
-            </label>
-          </div>
-    
-    
-          <div class="form-check mx-4">
-            <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option4}}" value="Option4">
-            <label class="form-check-label" for="option4">
-              {{q.option4}}
-            </label>
-          </div>
-          <br>
+        <h3 class="text-danger">{{ forloop.counter }}. {{q.question}}</h3>
+        <h4 style="text-align: right;">[{{q.marks}} Marks]</h4>
+
+        <input type="hidden" name="csrfmiddlewaretoken"
+          value="C24rUotmdHawVQJL3KrqiWxvti8UffOFYUc8TRbZtLt36AVLdP3jbkzUVe3beRAa">
+
+
+        <div class="form-check mx-4">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option1}}" value="Option1">
+          <label class="form-check-label" for="option1">
+            {{q.option1}}
+          </label>
+        </div>
+
+
+        <div class="form-check mx-4">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option2}}" value="Option2">
+          <label class="form-check-label" for="option2">
+            {{q.option2}}
+          </label>
+        </div>
+
+
+        <div class="form-check mx-4">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option3}}" value="Option3">
+          <label class="form-check-label" for="option3">
+            {{q.option3}}
+          </label>
+        </div>
+
+
+        <div class="form-check mx-4">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option4}}" value="Option4">
+          <label class="form-check-label" for="option4">
+            {{q.option4}}
+          </label>
+        </div>
+        <br>
         {% endfor %}
         <input class="btn btn-success btn-lg" style="border-radius: 0%;" type="submit" value="Submit Answers">
       </form>
@@ -73,7 +73,7 @@
 </div>
 
 <script>
-  function saveAns(){
+  function saveAns() {
     var ele = document.getElementsByTagName('input');
     for (i = 0; i < ele.length; i++) {
       if (ele[i].type = "radio") {
@@ -90,6 +90,12 @@
     var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
   }
+</script>
+
+<script>
+  document.addEventListener("visibilitychange", function () {
+    window.location.href = "{% url 'student-exam' %}"
+  });
 </script>
 
 {% endblock content %}
