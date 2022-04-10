@@ -71,3 +71,10 @@ class Result(models.Model):
     exam = models.ForeignKey(Course, on_delete=models.CASCADE)
     marks = models.PositiveIntegerField()
     date = models.DateTimeField(auto_now=True)
+
+
+class ShortQuestion(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    marks = models.PositiveIntegerField()
+    question = models.CharField(max_length=2000)
+    answer = models.CharField(max_length=2000)
