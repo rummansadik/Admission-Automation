@@ -15,38 +15,47 @@
 </head>
 
 {% include 'messages.html' %}
-<h2 style="text-align:center;">Add Question</h2>
-<form method="POST" autocomplete="off" style="margin:100px;margin-top: 0px;">
-  {%csrf_token%}
-  <div class="form-group">
-    <label for="question">Course</label>
-    {% render_field questionForm.courseID|attr:'required:true' class="form-control" %}
-    <br>
 
-    <label for="question">Question</label>
-    {% render_field questionForm.question|attr:'required:true' class="form-control" placeholder="Example: What is the relation calculus?" %}
-    <br>
-    <label for="question_number">Marks</label>
-    {% render_field questionForm.marks|attr:'required:true' class="form-control" placeholder="Example: 5" %}
-    <br>
-    <label for="option1">Option 1</label>
-    {% render_field questionForm.option1|attr:'required:true' class="form-control" placeholder="Example: It is a kind of procedural language" %}
-    <br>
-    <label for="option2">Option 2</label>
-    {% render_field questionForm.option2|attr:'required:true' class="form-control" placeholder="Example: It is a non-procedural language" %}
-    <br>
-    <label for="option3">Option 3</label>
-    {% render_field questionForm.option3|attr:'required:true' class="form-control" placeholder="Example: It is a high-level language" %}
-    <br>
-    <label for="option4">Option 4</label>
-    {% render_field questionForm.option4|attr:'required:true' class="form-control" placeholder="Example: It is Data Definition language" %}
-    <br>
-    <label for="answer">Correct Answer</label>
-    {% render_field questionForm.answer|attr:'required:true' class="form-control" %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-9">
+      <h2 id="title" style="text-align:left; ">Add Muliple Choice Question</h2>
+    </div>
+    <button type="button" class="btn btn-primary btn-lg float-right" onclick="addMCQ()">MCQ</button>
+    <button type="button" class="btn btn-primary btn-lg float-right" onclick="addShort()">Short Question</button>
+  </div>
+
+  <br>
+
+  <div id="add-mcq">
+    {% include "teacher/add_mcq.html" %}
+  </div>
+
+  <div id="add-short" style="display: none">
+    {% include "teacher/add_short.html" %}
   </div>
 
 
-  <button type="submit" class="btn btn-success" style="border-radius: 0%;">Submit Question</button>
-</form>
-<br><br><br>
+</div>
+
+<script>
+  function addMCQ(){
+    var mcq = document.getElementById("add-mcq");
+    var short = document.getElementById("add-short");
+    var title = document.getElementById("title");
+    mcq.style.display = 'block';
+    short.style.display = 'none';
+    title.innerHTML = "Add Muliple Choice Question";
+  }
+
+  function addShort(){
+    var mcq = document.getElementById("add-mcq");
+    var short = document.getElementById("add-short");
+    var title = document.getElementById("title");
+    mcq.style.display = 'none';
+    short.style.display = 'block';
+    title.innerHTML = "Add Question";
+  }
+</script>
+
 {% endblock content %}

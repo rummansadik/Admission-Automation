@@ -94,22 +94,51 @@ def teacher_question_view(request):
     return render(request, 'teacher/teacher_question.html')
 
 
+def solve_for_question_form(request, questionForm):
+    questionForm = QFORM.QuestionForm(request.POST)
+    if questionForm.is_valid():
+        question = questionForm.save(commit=False)
+        course = QMODEL.Course.objects.get(id=request.POST.get('courseID'))
+        question.course = course
+        question.save()
+        messages.success(request, "Question Added")
+        print(questionForm.cleaned_data)
+    else:
+        print("mcq form is invalid")
+    return HttpResponseRedirect('/teacher/teacher-add-question')
+
+
+def solve_for_short_form(request, shortQuestionForm):
+    shortQuestionForm = QFORM.ShortQuestionForm(request.POST)
+    if shortQuestionForm.is_valid():
+        question = shortQuestionForm.save(commit=False)
+        course = QMODEL.Course.objects.get(id=request.POST.get('courseID'))
+        question.course = course
+        question.save()
+        messages.success(request, "Question Added")
+        print(shortQuestionForm.cleaned_data)
+    else:
+        print("short form is invalid")
+    return HttpResponseRedirect('/teacher/teacher-add-question')
+
+
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
 def teacher_add_question_view(request):
     questionForm = QFORM.QuestionForm()
+    shortQuestionForm = QFORM.ShortQuestionForm()
     if request.method == 'POST':
-        questionForm = QFORM.QuestionForm(request.POST)
-        if questionForm.is_valid():
-            question = questionForm.save(commit=False)
-            course = QMODEL.Course.objects.get(id=request.POST.get('courseID'))
-            question.course = course
-            question.save()
-            messages.success(request, "Question Added")
-        else:
-            print("form is invalid")
-        return HttpResponseRedirect('/teacher/teacher-add-question')
-    return render(request, 'teacher/teacher_add_question.html', {'questionForm': questionForm})
+        if 'add_mcq' in request.POST:
+            solve_for_question_form(request, questionForm)
+        elif 'add_short' in request.POST:
+            solve_for_short_form(request, shortQuestionForm)
+
+    context = {
+        'questionForm': questionForm,
+        'shortQuestionForm': shortQuestionForm,
+    }
+
+    return render(request, 'teacher/teacher_add_question.html', context)
 
 
 @login_required(login_url='teacherlogin')
