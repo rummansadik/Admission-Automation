@@ -94,11 +94,18 @@ def student_exam_view(request):
 @user_passes_test(is_student)
 def take_exam_view(request, pk):
     course = QMODEL.Course.objects.get(id=pk)
-    total_questions = QMODEL.Question.objects.all().filter(course=course).count()
     questions = QMODEL.Question.objects.all().filter(course=course)
+    shorts = QMODEL.ShortQuestion.objects.all().filter(course=course)
+
     total_marks = 0
+    total_questions = 0
     for q in questions:
-        total_marks = total_marks + q.marks
+        total_questions += 1
+        total_marks += q.marks
+
+    for q in shorts: 
+        total_questions += 1
+        total_marks += q.marks
 
     context = {
         'course': course,
@@ -114,13 +121,15 @@ def take_exam_view(request, pk):
 def start_exam_view(request, pk):
     course = QMODEL.Course.objects.get(id=pk)
     questions = QMODEL.Question.objects.all().filter(course=course)
+    shorts = QMODEL.ShortQuestion.objects.all().filter(course=course)
 
     if request.method == 'POST':
         pass
 
     context = {
         'course': course, 
-        'questions': questions
+        'questions': questions,
+        'shorts': shorts,
     }
 
     response = render(request, 'student/start_exam.html', context=context)
