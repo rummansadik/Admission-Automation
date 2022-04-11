@@ -141,33 +141,52 @@ def start_exam_view(request, pk):
 @user_passes_test(is_student)
 def calculate_marks_view(request):
 
-    if request.COOKIES.get('course_id') is not None:
-        course_id = request.COOKIES.get('course_id')
-        course = QMODEL.Course.objects.get(id=course_id)
+    if request.COOKIES.get('course_id') is None:
+        return HttpResponseRedirect('student-exam')
 
-        total_marks = 0
-        questions = QMODEL.Question.objects.all().filter(course=course)
-        for i in range(len(questions)):
-            selected_ans = request.COOKIES.get(str(i+1))
-            actual_answer = questions[i].answer
-            if selected_ans == actual_answer:
-                total_marks = total_marks + questions[i].marks
+    course_id = request.COOKIES.get('course_id')
+    course = QMODEL.Course.objects.get(id=course_id)
 
-        student = models.Student.objects.get(user_id=request.user.id)
-        result = QMODEL.Result()
-        result.marks = total_marks
-        result.exam = course
-        result.student = student
-        result.save()
+    shorts = QMODEL.ShortQuestion.objects.all().filter(course=course)
+    questions = QMODEL.Question.objects.all().filter(course=course)
+    student = models.Student.objects.get(user_id=request.user.id)
 
-    if request.method == 'POST':
-        dt = request.POST
-        print(dt)
-        pass
+    mcq_marks = []
+    mcq_answer = []
+    for i in range(len(questions)):
+        selected_ans = request.COOKIES.get(str(i+1))
+        actual_answer = questions[i].answer
+        mcq_answer.append(selected_ans)
+        if selected_ans == actual_answer:
+            mcq_marks.append(str(questions[i].marks))
+        else:
+            mcq_marks.append('0')
 
-    request.set_cookie('course_id', None)
+    shorts_answer = []
+    for i in range(len(shorts)):
+        name = 'question' + str(i+1)
+        answer = request.POST.get(name, '')
+        shorts_answer.append(answer)
+    
+    answerSheet = QMODEL.AnswerSheet()
+    answerSheet.student = student
+    answerSheet.course = course
+    answerSheet.set_mcq_answer(mcq_answer)
+    answerSheet.set_mcq_marks(mcq_marks)
+    answerSheet.set_shorts_answer(shorts_answer)
+    answerSheet.save()
+
+    print(
+        mcq_answer,
+        mcq_marks,
+        shorts_answer,
+        'saved'
+    )
+
+    obj = QMODEL.AnswerSheet.objects.all()
+    print(obj)
+
     return HttpResponseRedirect('view-result')
-
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
