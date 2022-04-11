@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.http.response import StreamingHttpResponse
-from django.shortcuts import redirect, render, reverse
+from django.shortcuts import render
 from exam import models as QMODEL
 
 from student.camera import *
@@ -12,7 +12,6 @@ from student.camera import *
 from . import forms, models
 
 
-# for showing signup/login button for student
 def studentclick_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
@@ -44,7 +43,6 @@ def is_student(user):
 
 
 def get_student(user):
-    # print("hello ", user.pk)
     return models.Student.objects.get(user_id=user.pk)
 
 
@@ -52,7 +50,6 @@ def get_student(user):
 @user_passes_test(is_student)
 def student_dashboard_view(request):
     current_student = get_student(request.user)
-    # print("current - ", current_student.pk)
     print("pics --- ", current_student.profile_pic.url)
     dict = {
         'student': current_student,
@@ -175,16 +172,6 @@ def calculate_marks_view(request):
     answerSheet.set_mcq_marks(mcq_marks)
     answerSheet.set_shorts_answer(shorts_answer)
     answerSheet.save()
-
-    print(
-        mcq_answer,
-        mcq_marks,
-        shorts_answer,
-        'saved'
-    )
-
-    obj = QMODEL.AnswerSheet.objects.all()
-    print(obj)
 
     return HttpResponseRedirect('view-result')
 
