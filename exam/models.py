@@ -3,9 +3,8 @@ from student.models import Student
 
 from datetime import datetime
 from multiselectfield import MultiSelectField
+from django.contrib.postgres.fields import ArrayField
 
-# class Subjects(models.Model):
-#     name = models.CharField(max_length=50)
 
 subject_choices = (
     ('CSE', 'CSE'),
@@ -77,3 +76,12 @@ class ShortQuestion(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     marks = models.PositiveIntegerField()
     question = models.CharField(max_length=2000)
+
+class MCQAnswer(models.Model):
+    pass
+
+class AnswerSheet(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    exam = models.ForeignKey(Course, on_delete=models.CASCADE)
+    mcq = models.ManyToManyField(Question)
+    shorts = models.ManyToManyField(ShortQuestion)

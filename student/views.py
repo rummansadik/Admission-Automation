@@ -140,6 +140,7 @@ def start_exam_view(request, pk):
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
 def calculate_marks_view(request):
+
     if request.COOKIES.get('course_id') is not None:
         course_id = request.COOKIES.get('course_id')
         course = QMODEL.Course.objects.get(id=course_id)
@@ -147,11 +148,11 @@ def calculate_marks_view(request):
         total_marks = 0
         questions = QMODEL.Question.objects.all().filter(course=course)
         for i in range(len(questions)):
-
             selected_ans = request.COOKIES.get(str(i+1))
             actual_answer = questions[i].answer
             if selected_ans == actual_answer:
                 total_marks = total_marks + questions[i].marks
+
         student = models.Student.objects.get(user_id=request.user.id)
         result = QMODEL.Result()
         result.marks = total_marks
@@ -159,7 +160,13 @@ def calculate_marks_view(request):
         result.student = student
         result.save()
 
-        return HttpResponseRedirect('view-result')
+    if request.method == 'POST':
+        dt = request.POST
+        print(dt)
+        pass
+
+    request.set_cookie('course_id', None)
+    return HttpResponseRedirect('view-result')
 
 
 @login_required(login_url='studentlogin')
@@ -206,7 +213,8 @@ def webcam_feed(request):
 def mask_feed(request):
 	return StreamingHttpResponse(gen(MaskDetect()),
 					content_type='multipart/x-mixed-replace; boundary=frame')
-					
+
+
 def livecam_feed(request):
 	return StreamingHttpResponse(gen(LiveWebCam()),
 					content_type='multipart/x-mixed-replace; boundary=frame')

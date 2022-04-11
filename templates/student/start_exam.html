@@ -21,7 +21,7 @@
     <div class="col-8">
       <form class="form" autocomplete="off" onsubmit="saveAns()" action="/student/calculate-marks" method="POST">
         {% csrf_token %}
-        <h2 style="text-align: center;">Course Name: {{course.course_name}}</h2>
+        <h2 style="text-align: center;">Course Name: {{course.course_name}}</h2> <hr>
 
         {% for q in questions %}
         <div class="row">
@@ -37,38 +37,39 @@
           value="C24rUotmdHawVQJL3KrqiWxvti8UffOFYUc8TRbZtLt36AVLdP3jbkzUVe3beRAa">
 
         <div class="form-check mx-4">
-          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option1}}" value="Option1">
-          <label class="form-check-label" for="option1">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option1}}" value="Option_1_{{ forloop.counter }}">
+          <label class="form-check-label" for="option_1_{{ forloop.counter }}">
             {{q.option1}}
           </label>
         </div>
 
 
         <div class="form-check mx-4">
-          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option2}}" value="Option2">
-          <label class="form-check-label" for="option2">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option2}}" value="Option_2_{{ forloop.counter }}">
+          <label class="form-check-label" for="option_2_{{ forloop.counter }}">
             {{q.option2}}
           </label>
         </div>
 
 
         <div class="form-check mx-4">
-          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option3}}" value="Option3">
-          <label class="form-check-label" for="option3">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option3}}" value="Option_3_{{ forloop.counter }}">
+          <label class="form-check-label" for="option_3_{{ forloop.counter }}">
             {{q.option3}}
           </label>
         </div>
 
 
         <div class="form-check mx-4">
-          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option4}}" value="Option4">
-          <label class="form-check-label" for="option4">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option4}}" value="Option_4_{{ forloop.counter }}">
+          <label class="form-check-label" for="option_4_{{ forloop.counter }}">
             {{q.option4}}
           </label>
         </div>
 
-        <br>
+        <br> <hr>
         {% endfor %}
+
 
         {% for q in shorts %}
         <div class="row">
@@ -80,14 +81,14 @@
           </div>
         </div>
 
-        <input type="hidden" name="csrfmiddlewaretoken"
-          value="C24rUotmdHawVQJL3KrqiWxvti8UffOFYUc8TRbZtLt36AVLdP3jbkzUVe3beRAa">
-
-        <div class="form-group">
-          <label for="shortQuestion"></label>
-          <input type="text" class="form-control" id="answer" placeholder="Write your answer...">
-        </div>
-        <br>
+        
+        <textarea 
+          placeholder="Write your answer here..."
+          name="question{{ forloop.counter }}" 
+          id="question{{ forloop.counter }}" 
+          cols="50" rows="1"
+        ></textarea>
+        <br><br> <hr>
         {% endfor %}
 
         <input class="btn btn-success btn-lg" style="border-radius: 0%;" type="submit" value="Submit Answers">
@@ -102,18 +103,18 @@
 <script>
   function saveAns() {
     var ele = document.getElementsByTagName('input');
-    for (i = 0; i < ele.length; i++) {
-      if (ele[i].type = "radio") {
+    for (var i = 0; i < ele.length; i++) {
+      if (ele[i].type == "radio") {
         if (ele[i].checked) {
-          setCookie(ele[i].name, ele[i].value, 3)
+          setCookie(ele[i].name, ele[i].value);
         }
       }
     }
   }
 
-  function setCookie(cname, cvalue, exdays) {
+  function setCookie(cname, cvalue) {
     var d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    d.setTime(d.getTime() + (5 * 60 * 1000));
     var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
   }
