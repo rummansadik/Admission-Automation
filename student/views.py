@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.http.response import StreamingHttpResponse
-from django.shortcuts import redirect, render, reverse
+from django.shortcuts import render
 from exam import models as QMODEL
 
 from student.camera import *
@@ -12,7 +12,6 @@ from student.camera import *
 from . import forms, models
 
 
-# for showing signup/login button for student
 def studentclick_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
@@ -44,7 +43,6 @@ def is_student(user):
 
 
 def get_student(user):
-    # print("hello ", user.pk)
     return models.Student.objects.get(user_id=user.pk)
 
 
@@ -52,7 +50,6 @@ def get_student(user):
 @user_passes_test(is_student)
 def student_dashboard_view(request):
     current_student = get_student(request.user)
-    # print("current - ", current_student.pk)
     print("pics --- ", current_student.profile_pic.url)
     dict = {
         'student': current_student,
@@ -140,27 +137,43 @@ def start_exam_view(request, pk):
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
 def calculate_marks_view(request):
-    if request.COOKIES.get('course_id') is not None:
-        course_id = request.COOKIES.get('course_id')
-        course = QMODEL.Course.objects.get(id=course_id)
 
-        total_marks = 0
-        questions = QMODEL.Question.objects.all().filter(course=course)
-        for i in range(len(questions)):
+    if request.COOKIES.get('course_id') is None:
+        return HttpResponseRedirect('student-exam')
 
-            selected_ans = request.COOKIES.get(str(i+1))
-            actual_answer = questions[i].answer
-            if selected_ans == actual_answer:
-                total_marks = total_marks + questions[i].marks
-        student = models.Student.objects.get(user_id=request.user.id)
-        result = QMODEL.Result()
-        result.marks = total_marks
-        result.exam = course
-        result.student = student
-        result.save()
+    course_id = request.COOKIES.get('course_id')
+    course = QMODEL.Course.objects.get(id=course_id)
 
-        return HttpResponseRedirect('view-result')
+    shorts = QMODEL.ShortQuestion.objects.all().filter(course=course)
+    questions = QMODEL.Question.objects.all().filter(course=course)
+    student = models.Student.objects.get(user_id=request.user.id)
 
+    mcq_marks = []
+    mcq_answer = []
+    for i in range(len(questions)):
+        selected_ans = request.COOKIES.get(str(i+1))
+        actual_answer = questions[i].answer
+        mcq_answer.append(selected_ans)
+        if selected_ans == actual_answer:
+            mcq_marks.append(str(questions[i].marks))
+        else:
+            mcq_marks.append('0')
+
+    shorts_answer = []
+    for i in range(len(shorts)):
+        name = 'question' + str(i+1)
+        answer = request.POST.get(name, '')
+        shorts_answer.append(answer)
+    
+    answerSheet = QMODEL.AnswerSheet()
+    answerSheet.student = student
+    answerSheet.course = course
+    answerSheet.set_mcq_answer(mcq_answer)
+    answerSheet.set_mcq_marks(mcq_marks)
+    answerSheet.set_shorts_answer(shorts_answer)
+    answerSheet.save()
+
+    return HttpResponseRedirect('view-result')
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
@@ -206,7 +219,8 @@ def webcam_feed(request):
 def mask_feed(request):
 	return StreamingHttpResponse(gen(MaskDetect()),
 					content_type='multipart/x-mixed-replace; boundary=frame')
-					
+
+
 def livecam_feed(request):
 	return StreamingHttpResponse(gen(LiveWebCam()),
 					content_type='multipart/x-mixed-replace; boundary=frame')

@@ -1,11 +1,9 @@
-from django.db import models
-from student.models import Student
-
+import json
 from datetime import datetime
-from multiselectfield import MultiSelectField
 
-# class Subjects(models.Model):
-#     name = models.CharField(max_length=50)
+from django.db import models
+from multiselectfield import MultiSelectField
+from student.models import Student
 
 subject_choices = (
     ('CSE', 'CSE'),
@@ -17,12 +15,13 @@ subject_choices = (
     ('Bangla', 'Bangla'),
 )
 
+
 class University(models.Model):
     university_name = models.CharField(max_length=100)
     subjects = MultiSelectField(
-        max_length = 100,
-        max_choices = 7,
-        choices = subject_choices
+        max_length=100,
+        max_choices=7,
+        choices=subject_choices
     )
 
 
@@ -77,3 +76,29 @@ class ShortQuestion(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     marks = models.PositiveIntegerField()
     question = models.CharField(max_length=2000)
+
+
+class AnswerSheet(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    mcqAnswer = models.CharField(max_length=200, blank=True)
+    mcqMarks = models.CharField(max_length=200, blank=True)
+    shortsAnswer = models.CharField(max_length=2000, blank=True)
+
+    def set_mcq_answer(self, answer):
+        self.mcqAnswer = json.dumps(answer)
+
+    def get_mcq_answer(self):
+        return json.loads(self.mcqAnswer)
+
+    def set_mcq_marks(self, answer):
+        self.mcqMarks = json.dumps(answer)
+
+    def get_mcq_marks(self):
+        return json.loads(self.mcqMarks)
+
+    def set_shorts_answer(self, answer):
+        self.shortsAnswer = json.dumps(answer)
+
+    def get_shorts_answer(self):
+        return json.loads(self.shortsAnswer)
