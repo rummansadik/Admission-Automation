@@ -37,32 +37,32 @@
           value="C24rUotmdHawVQJL3KrqiWxvti8UffOFYUc8TRbZtLt36AVLdP3jbkzUVe3beRAa">
 
         <div class="form-check mx-4">
-          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option1}}" value="Option_1_{{ forloop.counter }}">
-          <label class="form-check-label" for="option_1_{{ forloop.counter }}">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option1}}" value="Option1">
+          <label class="form-check-label" for="option1">
             {{q.option1}}
           </label>
         </div>
 
 
         <div class="form-check mx-4">
-          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option2}}" value="Option_2_{{ forloop.counter }}">
-          <label class="form-check-label" for="option_2_{{ forloop.counter }}">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option2}}" value="Option2">
+          <label class="form-check-label" for="option2">
             {{q.option2}}
           </label>
         </div>
 
 
         <div class="form-check mx-4">
-          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option3}}" value="Option_3_{{ forloop.counter }}">
-          <label class="form-check-label" for="option_3_{{ forloop.counter }}">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option3}}" value="Option3">
+          <label class="form-check-label" for="option3">
             {{q.option3}}
           </label>
         </div>
 
 
         <div class="form-check mx-4">
-          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option4}}" value="Option_4_{{ forloop.counter }}">
-          <label class="form-check-label" for="option_4_{{ forloop.counter }}">
+          <input class="form-check-input" type="radio" name="{{ forloop.counter }}" id="{{q.option4}}" value="Option4">
+          <label class="form-check-label" for="option4">
             {{q.option4}}
           </label>
         </div>
@@ -94,10 +94,13 @@
         <input class="btn btn-success btn-lg" style="border-radius: 0%;" type="submit" value="Submit Answers">
       </form>
     </div>
+
     <div class="col w-25 h-25 d-inline-block">
-      <img style="width: 400px; text-size-adjust: auto;" src="{% url 'video-feed' %}">
+      <img style="width: 400px; text-size-adjust: auto;" src="#">
+      <!-- <img style="width: 400px; text-size-adjust: auto;" src="{% url 'video-feed' %}"> -->
     </div>
   </div>
+
 </div>
 
 <script>

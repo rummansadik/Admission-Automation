@@ -84,6 +84,7 @@ class AnswerSheet(models.Model):
     mcqAnswer = models.CharField(max_length=200, blank=True)
     mcqMarks = models.CharField(max_length=200, blank=True)
     shortsAnswer = models.CharField(max_length=2000, blank=True)
+    is_evaluated = models.BooleanField(default=False)
 
     def set_mcq_answer(self, answer):
         self.mcqAnswer = json.dumps(answer)

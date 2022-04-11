@@ -133,6 +133,16 @@ def start_exam_view(request, pk):
     response.set_cookie('course_id', course.id)
     return response
 
+def get_answer_value(question, ans):
+    if ans == 'Option1':
+        return question.option1
+    elif ans == 'Option2':
+        return question.option2
+    elif ans == 'Option3':
+        return question.option3
+    elif ans == 'Option4':
+        return question.option4
+    return None
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
@@ -151,13 +161,17 @@ def calculate_marks_view(request):
     mcq_marks = []
     mcq_answer = []
     for i in range(len(questions)):
-        selected_ans = request.COOKIES.get(str(i+1))
+        selected_ans = request.COOKIES.get(str(i+1), None)
         actual_answer = questions[i].answer
-        mcq_answer.append(selected_ans)
+
+        mcq_answer.append(get_answer_value(questions[i], selected_ans))
         if selected_ans == actual_answer:
             mcq_marks.append(str(questions[i].marks))
         else:
             mcq_marks.append('0')
+
+    print(mcq_answer)
+    print(mcq_marks)
 
     shorts_answer = []
     for i in range(len(shorts)):
