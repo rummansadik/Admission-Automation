@@ -77,40 +77,83 @@
     </style>
 </head>
 
-<div class="container content">
+<div class="container">
     <div class="row">
-        <div class="col">
+        <div class="col-md-8">
             <h3>Answer Sheet For <i>{{ student }}</i></h3>
         </div>
         <div class="col">
             <h3 style="text-align: right;">Course Name: {{ course }}</h3>
         </div>
-    </div>
+    </div> <hr>
+    
+    <div class="d-flex justify-content-center">
+        <div class="col-md-10">
+            <form class="form" method="post" autocomplete="off">
+                {% csrf_token %}
+                <input type="hidden" name="csrfmiddlewaretoken" value="C24rUotmdHawVQJL3KrqiWxvti8UffOFYUc8TRbZtLt36AVLdP3jbkzUVe3beRAa">
+                {% for q, a, m, ms in mcq %}
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h3 class="text-danger">{{ forloop.counter }}. {{q}}</h3>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row float-right">
+                                <input value="{{ m }}" style="width: 30px;" type="text" name="mark{{forloop.counter}}" id="mark{{forloop.counter}}">
+                                <h4>/</h4>
+                                <h4>{{ ms }} Marks</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Selected Answer: {{ a }}</h4>
+                        </div>
+                    </div>
+                    <br> <hr>
+                {% endfor %}
 
-    <div class="row container">
-        <form class="form" method="post" autocomplete="off">
-            {% csrf_token %}
-            <input type="hidden" name="csrfmiddlewaretoken" value="C24rUotmdHawVQJL3KrqiWxvti8UffOFYUc8TRbZtLt36AVLdP3jbkzUVe3beRAa">
-            {% for q, a, m, ms in mcq %}
-                <p>{{ q }} {{ a }} {{ m }} {{ ms }}</p>
-            {% endfor %}
-        </form>
+                {% for q, a, ms in shorts %}
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h3 class="text-danger">{{ forloop.counter }}. {{ q }}</h3>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row float-right">
+                                <input value="0" style="width: 30px;" type="text" name="mark{{forloop.counter}}" id="mark{{forloop.counter}}">
+                                <h4>/</h4>
+                                <h4>{{ ms }} Marks</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Given Answer: {{ a }}</h4>
+                        </div>
+                    </div>
+                    <br> <hr>
+                {% endfor %}
+
+                <input class="btn btn-success btn-lg" style="border-radius: 0%;" type="submit" value="Submit Marks">
+
+            </form>
+        </div>
     </div>
 
     <!-- <form class="form" autocomplete="off" method="POST">
         {% csrf_token %}
 
         <input type="hidden" name="csrfmiddlewaretoken"
-          value="C24rUotmdHawVQJL3KrqiWxvti8UffOFYUc8TRbZtLt36AVLdP3jbkzUVe3beRAa">
+            value="C24rUotmdHawVQJL3KrqiWxvti8UffOFYUc8TRbZtLt36AVLdP3jbkzUVe3beRAa">
 
         {% for q in mcq %}
         <div class="row">
-          <div class="col-md-8">
+            <div class="col-md-8">
             <h3 class="text-danger">{{ forloop.counter }}. {{q.question}}</h3>
-          </div>
-          <div class="col">
+            </div>
+            <div class="col">
             <h4 style="text-align: right;">[{{q.marks}} Marks]</h4>
-          </div>
+            </div>
         </div>
         <br> <hr>
         {% endfor %}
@@ -118,26 +161,26 @@
 
         {% for q in shorts %}
         <div class="row">
-          <div class="col-md-8">
+            <div class="col-md-8">
             <h3 class="text-danger">{{ questions.count|add:forloop.counter }}. {{q.question}}</h3>
-          </div>
-          <div class="col">
+            </div>
+            <div class="col">
             <h4 style="text-align: right;">[{{q.marks}} Marks]</h4>
-          </div>
+            </div>
         </div>
 
         
         <textarea 
-          placeholder="Write your answer here..."
-          name="question{{ forloop.counter }}" 
-          id="question{{ forloop.counter }}" 
-          cols="50" rows="1"
+            placeholder="Write your answer here..."
+            name="question{{ forloop.counter }}" 
+            id="question{{ forloop.counter }}" 
+            cols="50" rows="1"
         ></textarea>
         <br><br> <hr>
         {% endfor %}
 
         <input class="btn btn-success btn-lg" style="border-radius: 0%;" type="submit" value="Submit Answers">
-      </form> -->
+        </form> -->
 </div>
 
 <script src="http://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>

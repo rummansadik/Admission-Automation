@@ -142,7 +142,7 @@ def get_answer_value(question, ans):
         return question.option3
     elif ans == 'Option4':
         return question.option4
-    return None
+    return ''
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
@@ -170,8 +170,8 @@ def calculate_marks_view(request):
         else:
             mcq_marks.append('0')
 
-    print(mcq_answer)
-    print(mcq_marks)
+    # print(mcq_answer)
+    # print(mcq_marks)
 
     shorts_answer = []
     for i in range(len(shorts)):
