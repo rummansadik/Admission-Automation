@@ -113,8 +113,9 @@ def teacher_pending_student_answer_view(request, pk):
         result.marks = marks
         result.save()
 
-        answerSheet.is_evaluated = True
-        answerSheet.save()
+        QMODEL.AnswerSheet.objects.filter(id=pk).update(
+            is_evaluated=True
+        )
 
         return HttpResponseRedirect('/teacher/pending-students')
 
