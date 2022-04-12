@@ -100,7 +100,7 @@ def take_exam_view(request, pk):
         total_questions += 1
         total_marks += q.marks
 
-    for q in shorts: 
+    for q in shorts:
         total_questions += 1
         total_marks += q.marks
 
@@ -124,7 +124,7 @@ def start_exam_view(request, pk):
         pass
 
     context = {
-        'course': course, 
+        'course': course,
         'questions': questions,
         'shorts': shorts,
     }
@@ -132,6 +132,7 @@ def start_exam_view(request, pk):
     response = render(request, 'student/start_exam.html', context=context)
     response.set_cookie('course_id', course.id)
     return response
+
 
 def get_answer_value(question, ans):
     if ans == 'Option1':
@@ -143,6 +144,7 @@ def get_answer_value(question, ans):
     elif ans == 'Option4':
         return question.option4
     return ''
+
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
@@ -178,7 +180,7 @@ def calculate_marks_view(request):
         name = 'question' + str(i+1)
         answer = request.POST.get(name, '')
         shorts_answer.append(answer)
-    
+
     answerSheet = QMODEL.AnswerSheet()
     answerSheet.student = student
     answerSheet.course = course
@@ -188,6 +190,7 @@ def calculate_marks_view(request):
     answerSheet.save()
 
     return HttpResponseRedirect('view-result')
+
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
@@ -203,6 +206,7 @@ def check_marks_view(request, pk):
     student = models.Student.objects.get(user_id=request.user.id)
     results = QMODEL.Result.objects.all().filter(
         exam=course).filter(student=student)
+    results = results[::-1]
     return render(request, 'student/check_marks.html', {'results': results})
 
 
@@ -214,27 +218,27 @@ def student_marks_view(request):
 
 
 def gen(camera):
-	while True:
-		frame = camera.get_frame()
-		yield (b'--frame\r\n'
-				b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+    while True:
+        frame = camera.get_frame()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
 
 def video_feed(request):
     return StreamingHttpResponse(gen(VideoCamera(request.user.id)),
-                content_type='multipart/x-mixed-replace; boundary=frame')
+                                 content_type='multipart/x-mixed-replace; boundary=frame')
 
 
 def webcam_feed(request):
-	return StreamingHttpResponse(gen(IPWebCam()),
-					content_type='multipart/x-mixed-replace; boundary=frame')
+    return StreamingHttpResponse(gen(IPWebCam()),
+                                 content_type='multipart/x-mixed-replace; boundary=frame')
 
 
 def mask_feed(request):
-	return StreamingHttpResponse(gen(MaskDetect()),
-					content_type='multipart/x-mixed-replace; boundary=frame')
+    return StreamingHttpResponse(gen(MaskDetect()),
+                                 content_type='multipart/x-mixed-replace; boundary=frame')
 
 
 def livecam_feed(request):
-	return StreamingHttpResponse(gen(LiveWebCam()),
-					content_type='multipart/x-mixed-replace; boundary=frame')
+    return StreamingHttpResponse(gen(LiveWebCam()),
+                                 content_type='multipart/x-mixed-replace; boundary=frame')

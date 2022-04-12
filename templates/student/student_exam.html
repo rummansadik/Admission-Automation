@@ -42,7 +42,7 @@
       {% for t in running_courses %}
       <tr>
         <td>{{t.course_name}}</td>
-        <td>{{t.start_at|date:"H:i - d/m/Y"}}</td>
+        <td>{{t.start_at|date:"P - d/m/Y"}}</td>
         <td>
           <a class="btn btn-success btn-sm" style="border-radius:0px;" href="{% url 'take-exam' t.id  %}">
             <span class="glyphicon glyphicon-check"></span> Attend Exam
@@ -54,7 +54,7 @@
       {% for t in upcomming_courses %}
       <tr>
         <td> {{t.course_name}}</td>
-        <td>{{t.start_at|date:"H:i - d/m/Y"}}</td>
+        <td>{{t.start_at|date:"P - d/m/Y"}}</td>
         <td>
           <a class="btn btn-primary btn-sm" style="border-radius:0px;" href="#">
             <span class="glyphicon glyphicon-check"></span> Upcomming Exam
@@ -66,7 +66,7 @@
       {% for t in past_courses %}
       <tr>
         <td> {{t.course_name}}</td>
-        <td>{{t.start_at|date:"H:i - d/m/Y"}}</td>
+        <td>{{t.start_at|date:"P - d/m/Y"}}</td>
         <td>
           <a class="btn btn-secondary btn-sm" style="border-radius:0px;" href="{% url 'take-exam' t.id  %}">
             <span class="glyphicon glyphicon-check"></span> Past Exam
