@@ -100,8 +100,19 @@
       <!-- <img style="width: 400px; text-size-adjust: auto;" src="{% url 'video-feed' %}"> -->
     </div>
   </div>
-
+  <button onclick="notifyMe()">Notify me!</button>
 </div>
+
+<!-- <script>
+  document.addEventListener("visibilitychange", function () {
+    window.location.href = "{% url 'student-exam' %}"
+  });
+
+  function notifyMe() {
+    alert("I am an alert box!");
+  }
+
+</script> -->
 
 <script>
   function saveAns() {
@@ -123,10 +134,6 @@
   }
 </script>
 
-<!-- <script>
-  document.addEventListener("visibilitychange", function () {
-    window.location.href = "{% url 'student-exam' %}"
-  });
-</script> -->
+
 
 {% endblock content %}

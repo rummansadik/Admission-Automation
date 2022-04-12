@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from django.db import models
 from multiselectfield import MultiSelectField
@@ -16,10 +16,6 @@ subject_choices = (
 )
 
 
-def add_gmt6(dt):
-    return dt + timedelta(hours=6)
-
-
 class University(models.Model):
     university_name = models.CharField(max_length=100)
     subjects = MultiSelectField(
@@ -30,7 +26,20 @@ class University(models.Model):
 
 
 class Course(models.Model):
+
+    course_types = [
+        ('Strict', 'Strict'),
+        ('Warning', 'Warning'),
+        ('Open Book', 'Open Book'),
+    ]
+
     course_name = models.CharField(max_length=50)
+    course_type = models.CharField(
+        max_length=50,
+        choices=course_types,
+        default='Strict'
+    )
+
     question_number = models.PositiveIntegerField()
     total_marks = models.PositiveIntegerField()
 
@@ -41,14 +50,10 @@ class Course(models.Model):
     end_time = models.TimeField()
 
     def start_at(self):
-        dt = datetime.combine(
-            self.start_date, self.start_time)
-        return add_gmt6(dt)
+        return datetime.combine(self.start_date, self.start_time)
 
     def end_at(self):
-        dt = datetime.combine(
-            self.end_date, self.end_time)
-        return add_gmt6(dt)
+        return datetime.combine(self.end_date, self.end_time)
 
     def __str__(self):
         return self.course_name
