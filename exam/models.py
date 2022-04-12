@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.db import models
 from multiselectfield import MultiSelectField
@@ -14,6 +14,10 @@ subject_choices = (
     ('Math', 'Math'),
     ('Bangla', 'Bangla'),
 )
+
+
+def add_gmt6(dt):
+    return dt + timedelta(hours=6)
 
 
 class University(models.Model):
@@ -37,12 +41,14 @@ class Course(models.Model):
     end_time = models.TimeField()
 
     def start_at(self):
-        return datetime.combine(
+        dt = datetime.combine(
             self.start_date, self.start_time)
+        return add_gmt6(dt)
 
     def end_at(self):
-        return datetime.combine(
+        dt = datetime.combine(
             self.end_date, self.end_time)
+        return add_gmt6(dt)
 
     def __str__(self):
         return self.course_name
@@ -69,7 +75,11 @@ class Result(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     exam = models.ForeignKey(Course, on_delete=models.CASCADE)
     marks = models.PositiveIntegerField()
-    date = models.DateTimeField(auto_now=True)
+    date = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        self.date = datetime.now()
+        super(Result, self).save(*args, **kwargs)
 
 
 class ShortQuestion(models.Model):
@@ -84,6 +94,7 @@ class AnswerSheet(models.Model):
     mcqAnswer = models.CharField(max_length=200, blank=True)
     mcqMarks = models.CharField(max_length=200, blank=True)
     shortsAnswer = models.CharField(max_length=2000, blank=True)
+    is_evaluated = models.BooleanField(default=False)
 
     def set_mcq_answer(self, answer):
         self.mcqAnswer = json.dumps(answer)

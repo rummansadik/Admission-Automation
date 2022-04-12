@@ -4,6 +4,7 @@ from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from numpy import short
 from exam import forms as QFORM
 from exam import models as QMODEL
 from student import models as SMODEL
@@ -11,7 +12,6 @@ from student import models as SMODEL
 from . import forms
 
 
-# for showing signup/login button for teacher
 def teacherclick_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
@@ -46,12 +46,80 @@ def is_teacher(user):
 @user_passes_test(is_teacher)
 def teacher_dashboard_view(request):
     dict = {
-
         'total_course': QMODEL.Course.objects.all().count(),
         'total_question': QMODEL.Question.objects.all().count(),
-        'total_student': SMODEL.Student.objects.all().count()
+        'total_student': SMODEL.Student.objects.all().count(),
+        'pending_student': QMODEL.AnswerSheet.objects.all().filter(is_evaluated=False).count()
     }
+
     return render(request, 'teacher/teacher_dashboard.html', context=dict)
+
+
+@login_required(login_url='teacherlogin')
+@user_passes_test(is_teacher)
+def teacher_pending_students_view(request):
+    context = {
+        'pending_students': QMODEL.AnswerSheet.objects.all().filter(is_evaluated=False)
+    }
+
+    return render(request, 'teacher/pending_students.html', context=context)
+
+
+@login_required(login_url='teacherlogin')
+@user_passes_test(is_teacher)
+def teacher_pending_student_answer_view(request, pk):
+
+    answerSheet = QMODEL.AnswerSheet.objects.get(id=pk)
+    student = answerSheet.student
+    course = answerSheet.course
+    mcqQuestions = QMODEL.Question.objects.all().filter(course=course)
+    mcqAnswers = answerSheet.get_mcq_answer()
+    mcqMarks = answerSheet.get_mcq_marks()
+    shortQuestions = QMODEL.ShortQuestion.objects.all().filter(course=course)
+    shortAnswers = answerSheet.get_shorts_answer()
+
+    mcq = []
+    for q, a, m in zip(mcqQuestions, mcqAnswers, mcqMarks):
+        mcq.append((q.question, a, m, q.marks))
+
+    # print(mcq)
+
+    shorts = []
+    for q, a in zip(shortQuestions, shortAnswers):
+        shorts.append((q.question, a, q.marks))
+
+    # print(shorts)
+
+    context = {
+        'student': student,
+        'course': course,
+        'mcq': mcq,
+        'mcq_len': str(len(mcq)),
+        'shorts': shorts,
+    }
+
+    if request.method == 'POST':
+        print(request.POST)
+
+        marks = 0
+        for i in range(len(mcq) + len(shorts)):
+            name = 'mark' + str(i+1)
+            marks += int(request.POST.get(name, '0'))
+
+        print(marks)
+        result = QMODEL.Result()
+        result.student = student
+        result.exam = course
+        result.marks = marks
+        result.save()
+
+        QMODEL.AnswerSheet.objects.filter(id=pk).update(
+            is_evaluated=True
+        )
+
+        return HttpResponseRedirect('/teacher/pending-students')
+
+    return render(request, 'teacher/pending_student_answer.html', context=context)
 
 
 @login_required(login_url='teacherlogin')
