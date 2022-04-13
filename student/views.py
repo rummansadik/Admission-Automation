@@ -172,9 +172,6 @@ def calculate_marks_view(request):
         else:
             mcq_marks.append('0')
 
-    # print(mcq_answer)
-    # print(mcq_marks)
-
     shorts_answer = []
     for i in range(len(shorts)):
         name = 'question' + str(i+1)
@@ -187,6 +184,7 @@ def calculate_marks_view(request):
     answerSheet.set_mcq_answer(mcq_answer)
     answerSheet.set_mcq_marks(mcq_marks)
     answerSheet.set_shorts_answer(shorts_answer)
+    answerSheet.unfocus = request.POST.get('unfocus', 0)
     answerSheet.save()
 
     return HttpResponseRedirect('view-result')

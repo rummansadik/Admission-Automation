@@ -85,6 +85,18 @@ class Result(models.Model):
     marks = models.PositiveIntegerField()
     date = models.DateTimeField()
 
+    status_choices = [
+        ('Unknown', 'Unknown'),
+        ('Attended', 'Attended'),
+        ('Expelled', 'Expelled'),
+    ]
+
+    status = models.CharField(
+        max_length=20, 
+        choices=status_choices,
+        default='Unknown'
+    )
+
     def save(self, *args, **kwargs):
         self.date = datetime.now()
         super(Result, self).save(*args, **kwargs)
@@ -103,6 +115,7 @@ class AnswerSheet(models.Model):
     mcqMarks = models.CharField(max_length=200, blank=True)
     shortsAnswer = models.CharField(max_length=2000, blank=True)
     is_evaluated = models.BooleanField(default=False)
+    unfocus = models.IntegerField(default=0)
 
     def set_mcq_answer(self, answer):
         self.mcqAnswer = json.dumps(answer)

@@ -16,7 +16,6 @@
 
 
 <div class="container">
-
   <div class="row">
     <div class="col-8">
       <form class="form" autocomplete="off" onsubmit="saveAns()" action="/student/calculate-marks" method="POST">
@@ -91,6 +90,7 @@
         <br><br> <hr>
         {% endfor %}
 
+        <input type="hidden" id="unfocus" name="unfocus" value="0">
         <input class="btn btn-success btn-lg" style="border-radius: 0%;" type="submit" value="Submit Answers">
       </form>
     </div>
@@ -101,6 +101,7 @@
     </div>
   </div>
 </div>
+
 
 <script>
   var counter = 4;
@@ -125,8 +126,41 @@
     }
 
     else if( '{{ course.course_type }}' == 'Notify'){
-      alert("Warning");
-      alert(counter);
+
+      let permission = Notification.permission;
+      if(permission === "granted") {   
+        showNotification();
+      } 
+      else if(permission === "default"){   
+        requestAndShowPermission();
+        showNotification();
+      } 
+      else {  
+        alert("Get Alert");
+      }
+
+      function requestAndShowPermission() {
+        Notification.requestPermission(function (permission) {
+            if (permission === "granted") {
+                  showNotification();
+            }
+        });
+      }
+
+      function showNotification(){
+
+        unfocus = document.getElementById('unfocus');
+        let x = ((+unfocus.value) + 1);
+        unfocus.value = x;
+
+        var title = "Alert";   
+        var body = "You have being spoted changing your tab.\nYou might be get expelled";   
+        var notification = new Notification('Alert', {body});   
+        notification.onclick = () => { 
+          notification.close();
+          window.parent.focus();
+        }
+      }
     }
     
     else if( '{{ course.course_type }}' == 'Open Book'){

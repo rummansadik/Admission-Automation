@@ -4,7 +4,6 @@ from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from numpy import short
 from exam import forms as QFORM
 from exam import models as QMODEL
 from student import models as SMODEL
@@ -96,26 +95,42 @@ def teacher_pending_student_answer_view(request, pk):
         'mcq': mcq,
         'mcq_len': str(len(mcq)),
         'shorts': shorts,
+        'unfocus': str(answerSheet.unfocus),
     }
 
     if request.method == 'POST':
-        print(request.POST)
 
-        marks = 0
-        for i in range(len(mcq) + len(shorts)):
-            name = 'mark' + str(i+1)
-            marks += int(request.POST.get(name, '0'))
+        if 'submit_marks' in request.POST:
+            marks = 0
+            for i in range(len(mcq) + len(shorts)):
+                name = 'mark' + str(i+1)
+                marks += int(request.POST.get(name, '0'))
 
-        print(marks)
-        result = QMODEL.Result()
-        result.student = student
-        result.exam = course
-        result.marks = marks
-        result.save()
+            result = QMODEL.Result()
+            result.student = student
+            result.exam = course
+            result.marks = marks
+            result.save()
 
-        QMODEL.AnswerSheet.objects.filter(id=pk).update(
-            is_evaluated=True
-        )
+            QMODEL.AnswerSheet.objects.filter(id=pk).update(
+                is_evaluated=True
+            )
+
+        elif 'expel' in request.POST:
+            marks = 0
+            result = QMODEL.Result()
+            result.student = student
+            result.exam = course
+            result.marks = marks
+            result.status = 'Expelled'
+            result.save()
+
+            expel = QMODEL.Expel.objects.create(course=course, student=student)
+            expel.save()
+
+            QMODEL.AnswerSheet.objects.filter(id=pk).update(
+                is_evaluated=True
+            )
 
         return HttpResponseRedirect('/teacher/pending-students')
 
