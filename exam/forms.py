@@ -12,6 +12,7 @@ subject_choices = (
     ('Bangla', 'Bangla'),
 )
 
+
 class UniversityForm(forms.Form):
     university_name = forms.CharField(max_length=100)
     subjects = forms.MultipleChoiceField(
@@ -41,6 +42,12 @@ class TeacherSalaryForm(forms.Form):
     salary = forms.IntegerField()
 
 
+course_types = (
+    ('Strict', 'Strict'),
+    ('Warning', 'Warning'),
+    ('Open Book', 'Open Book'),
+)
+
 class CourseForm(forms.ModelForm):
     class Meta:
         model = models.Course
@@ -49,7 +56,8 @@ class CourseForm(forms.ModelForm):
             'start_date': forms.DateInput(format='%d/%m/%Y'),
             'start_time': forms.TimeInput(format='%H:%M'),
             'end_date': forms.DateInput(format='%d/%m/%Y'),
-            'end_time': forms.TimeInput(format='%H:%M')
+            'end_time': forms.TimeInput(format='%H:%M'),
+            'course_type': forms.Select(attrs={'class': 'form-control col-sm-2'}),
         }
 
 

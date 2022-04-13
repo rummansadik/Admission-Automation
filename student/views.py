@@ -63,25 +63,25 @@ def student_dashboard_view(request):
 @user_passes_test(is_student)
 def student_exam_view(request):
     time = datetime.now()
+    student = models.Student.objects.get(user_id=request.user.id)
     courses = QMODEL.Course.objects.all()
+    expels = QMODEL.Expel.objects.filter(student=student) 
 
-    past_courses = []
-    running_courses = []
-    upcomming_courses = []
-
+    # course, time, is_expel
+    course_list = []
     for course in courses:
-        print(course.start_at(), course.end_at(), time)
-        if course.end_at() < time:
-            past_courses.append(course)
+        if(expels.filter(course=course.id).count()):
+            course_list.append((course, 0, 1))
+        elif course.end_at() < time:
+            course_list.append((course, -1, 0))
         elif course.start_at() > time:
-            upcomming_courses.append(course)
+            course_list.append((course, 1, 0))
         else:
-            running_courses.append(course)
+            course_list.append((course, 0, 0))
 
+    course_list.reverse()
     context = {
-        'past_courses': past_courses,
-        'running_courses': running_courses,
-        'upcomming_courses': upcomming_courses
+        'courses': course_list
     }
 
     return render(request, 'student/student_exam.html', context)
@@ -208,6 +208,16 @@ def check_marks_view(request, pk):
         exam=course).filter(student=student)
     results = results[::-1]
     return render(request, 'student/check_marks.html', {'results': results})
+
+
+@login_required(login_url='studentlogin')
+@user_passes_test(is_student)
+def student_expel_view(request, pk):
+    course = QMODEL.Course.objects.get(id=pk)
+    student = models.Student.objects.get(user_id=request.user.id)
+    expel = QMODEL.Expel(course=course, student=student)
+    expel.save()
+    return render(request, 'student/expel.html', {})
 
 
 @login_required(login_url='studentlogin')
