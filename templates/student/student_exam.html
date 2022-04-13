@@ -1,6 +1,6 @@
 {% extends 'student/studentbase.html' %}
 {% block content %}
-{%load static%}
+{% load static %}
 
 <head>
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -39,45 +39,37 @@
         </tr>
       </thead>
 
-      {% for t in running_courses %}
+      {% for c, t, e in courses %}
       <tr>
-        <td>{{t.course_name}}</td>
-        <td>{{t.start_at|date:"P - d/m/Y"}}</td>
+        <td>{{c.course_name}}</td>
+        <td>{{c.start_at|date:"P - d/m/Y"}}</td>
         <td>
-          <a class="btn btn-success btn-sm" style="border-radius:0px;" href="{% url 'take-exam' t.id  %}">
+          {% if e > 0 %}
+          <a class="btn btn-danger btn-sm" style="border-radius:0px;" href="#">
+            <span class="glyphicon glyphicon-check"></span> Expelled
+          </a>
+
+          {% elif t == -1 %}
+          <a class="btn btn-secondary btn-sm" style="border-radius:0px;" href="#">
+            <span class="glyphicon glyphicon-check"></span> Past Exam
+          </a>
+
+          {% elif t == 0 %}
+          <a class="btn btn-success btn-sm" style="border-radius:0px;" href="{% url 'take-exam' c.id  %}">
             <span class="glyphicon glyphicon-check"></span> Attend Exam
           </a>
-        </td>
-      </tr>
-      {% endfor %}
 
-      {% for t in upcomming_courses %}
-      <tr>
-        <td> {{t.course_name}}</td>
-        <td>{{t.start_at|date:"P - d/m/Y"}}</td>
-        <td>
+          {% elif t == 1 %}
           <a class="btn btn-primary btn-sm" style="border-radius:0px;" href="#">
             <span class="glyphicon glyphicon-check"></span> Upcomming Exam
           </a>
+
+          {% endif %}
         </td>
       </tr>
       {% endfor %}
-
-      {% for t in past_courses %}
-      <tr>
-        <td> {{t.course_name}}</td>
-        <td>{{t.start_at|date:"P - d/m/Y"}}</td>
-        <td>
-          <a class="btn btn-secondary btn-sm" style="border-radius:0px;" href="{% url 'take-exam' t.id  %}">
-            <span class="glyphicon glyphicon-check"></span> Past Exam
-          </a>
-        </td>
-      </tr>
-      {% endfor %}
-
     </table>
   </div>
 </div>
-
 
 {% endblock content %}

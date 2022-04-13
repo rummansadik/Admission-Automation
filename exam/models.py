@@ -30,7 +30,10 @@ class Course(models.Model):
     course_types = [
         ('Strict', 'Strict'),
         ('Warning', 'Warning'),
+        ('Notify', 'Notify'),
         ('Open Book', 'Open Book'),
+        ('Capture', 'Capture'),
+        ('Record', 'Record'),
     ]
 
     course_name = models.CharField(max_length=50)
@@ -118,3 +121,8 @@ class AnswerSheet(models.Model):
 
     def get_shorts_answer(self):
         return json.loads(self.shortsAnswer)
+
+
+class Expel(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
