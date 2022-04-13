@@ -103,22 +103,25 @@
 </div>
 
 <script>
-  var counter = 0;
+  var counter = 4;
   document.addEventListener("visibilitychange", function () {
     // window.location.href = "{% url 'student-exam' %}"
-    counter++;
+    counter--;
     if(counter%2 == 0)
       notifyMe();
   });
 
   function notifyMe() {
     if( '{{ course.course_type }}' == 'Strict'){
-        window.location.href = "{% url 'expel' course.id %}"
+        window.location.href = "{% url 'expel' course.id %}";
     }
     
     else if( '{{ course.course_type }}' == 'Warning'){
-      alert("Warning");
-      alert(counter);
+      if(counter == 2){
+        alert("if you change your tab once more, you will expelled!");
+      }else{
+        window.location.href = "{% url 'expel' course.id %}";
+      }
     }
 
     else if( '{{ course.course_type }}' == 'Notify'){
