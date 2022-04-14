@@ -20,16 +20,6 @@ class UniversityForm(forms.Form):
         widget=forms.CheckboxSelectMultiple()
     )
 
-# class UniversityForm(forms.Form):
-#     class Meta:
-#         model = models.University
-#         fields = '__all__'
-#         widgets = {
-#             'subjects': forms.MultipleChoiceField(
-#                 choices=subject_choices
-#             )
-#         }
-
 
 class ContactusForm(forms.Form):
     Name = forms.CharField(max_length=30)
@@ -42,11 +32,15 @@ class TeacherSalaryForm(forms.Form):
     salary = forms.IntegerField()
 
 
-course_types = (
+course_types = [
     ('Strict', 'Strict'),
     ('Warning', 'Warning'),
+    ('Notify', 'Notify'),
     ('Open Book', 'Open Book'),
-)
+    ('Capture', 'Capture'),
+    ('Record', 'Record'),
+]
+
 
 class CourseForm(forms.ModelForm):
     class Meta:
@@ -88,10 +82,10 @@ class ShortQuestionForm(forms.ModelForm):
         queryset=models.Course.objects.all(),
         empty_label="Course Name",
         to_field_name="id"
-    ) 
+    )
 
     class Meta:
-        model = models.ShortQuestion 
+        model = models.ShortQuestion
         fields = ['marks', 'question']
         widgets = {
             'question': forms.Textarea(attrs={'rows': 3, 'cols': 50}),

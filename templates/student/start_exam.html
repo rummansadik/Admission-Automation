@@ -112,7 +112,7 @@
       notifyMe();
   });
 
-  function notifyMe() {
+  function notifyMe(){
     if( '{{ course.course_type }}' == 'Strict'){
         window.location.href = "{% url 'expel' course.id %}";
     }
@@ -164,8 +164,8 @@
     }
     
     else if( '{{ course.course_type }}' == 'Open Book'){
-      alert("Open Book");
-      alert(counter);
+      // Everything is allowe
+      alert
     }
 
     else if( '{{ course.course_type }}' == 'Capture'){
