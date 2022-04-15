@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.http.response import StreamingHttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from exam import models as QMODEL
 
 from student.camera import *
@@ -65,7 +65,7 @@ def student_exam_view(request):
     time = datetime.now()
     student = models.Student.objects.get(user_id=request.user.id)
     courses = QMODEL.Course.objects.all()
-    expels = QMODEL.Expel.objects.filter(student=student) 
+    expels = QMODEL.Expel.objects.filter(student=student)
 
     # course, time, is_expel
     course_list = []
@@ -239,6 +239,6 @@ def video_feed(request):
 
 
 def train_feed(request):
-    return StreamingHttpResponse(
-        gen(TrainModel(request.user.id)),
-        content_type='multipart/x-mixed-replace; boundary=frame')
+    values = gen(TrainModel(get_student(request.user)))
+    return StreamingHttpResponse(values,
+                                 content_type='multipart/x-mixed-replace; boundary=frame')

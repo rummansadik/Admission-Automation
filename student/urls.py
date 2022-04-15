@@ -19,4 +19,5 @@ urlpatterns = [
     path('student-marks', views.student_marks_view, name='student-marks'),
     path('expel/<int:pk>', views.student_expel_view, name='expel'),
     path('video_feed', views.video_feed, name='video-feed'),
+    path('train_feed', views.train_feed, name='train-feed'),
 ]
