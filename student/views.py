@@ -8,6 +8,7 @@ from django.shortcuts import redirect, render
 from exam import models as QMODEL
 
 from student.camera import *
+from student.train_dataset import *
 
 from . import forms, models
 
@@ -50,7 +51,15 @@ def get_student(user):
 @user_passes_test(is_student)
 def student_dashboard_view(request):
     current_student = get_student(request.user)
-    print("pics --- ", current_student.profile_pic.url)
+    if current_student.is_trained and current_student.is_recorded is False:
+        generate(request.user.pk)
+        models.Student.objects.update_or_create(
+            user_id = request.user.pk,
+            defaults={
+                'is_recorded': 'True'
+            }
+        )
+
     dict = {
         'student': current_student,
         'total_course': QMODEL.Course.objects.all().count(),
