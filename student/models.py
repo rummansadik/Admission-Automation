@@ -10,6 +10,7 @@ class Student(models.Model):
     mobile = models.CharField(max_length=20, null=False)
     profile_pic = models.ImageField(
         upload_to=get_dir, blank=True, null=True)
+    is_trained = models.BooleanField(default=False)
 
     @property
     def get_name(self):

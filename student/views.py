@@ -237,6 +237,10 @@ def video_feed(request):
                                  content_type='multipart/x-mixed-replace; boundary=frame')
 
 
+def train_feed(request):
+    pass
+
+
 def webcam_feed(request):
     return StreamingHttpResponse(gen(IPWebCam()),
                                  content_type='multipart/x-mixed-replace; boundary=frame')
