@@ -233,24 +233,12 @@ def gen(camera):
 
 
 def video_feed(request):
-    return StreamingHttpResponse(gen(VideoCamera(request.user.id)),
-                                 content_type='multipart/x-mixed-replace; boundary=frame')
+    return StreamingHttpResponse(
+        gen(VideoCamera(request.user.id)),
+        content_type='multipart/x-mixed-replace; boundary=frame')
 
 
 def train_feed(request):
-    pass
-
-
-def webcam_feed(request):
-    return StreamingHttpResponse(gen(IPWebCam()),
-                                 content_type='multipart/x-mixed-replace; boundary=frame')
-
-
-def mask_feed(request):
-    return StreamingHttpResponse(gen(MaskDetect()),
-                                 content_type='multipart/x-mixed-replace; boundary=frame')
-
-
-def livecam_feed(request):
-    return StreamingHttpResponse(gen(LiveWebCam()),
-                                 content_type='multipart/x-mixed-replace; boundary=frame')
+    return StreamingHttpResponse(
+        gen(TrainModel(request.user.id)),
+        content_type='multipart/x-mixed-replace; boundary=frame')
