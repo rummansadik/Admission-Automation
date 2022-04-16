@@ -19,8 +19,8 @@ def studentclick_view(request):
     return render(request, 'student/studentclick.html')
 
 
-def student_signup_view(request):
-    userForm = forms.StudentUserForm()
+def student_signup_view(request): 
+    userForm = forms.StudentUserForm() 
     studentForm = forms.StudentForm()
     mydict = {'userForm': userForm, 'studentForm': studentForm}
     if request.method == 'POST':
@@ -35,6 +35,8 @@ def student_signup_view(request):
             student.save()
             my_student_group = Group.objects.get_or_create(name='STUDENT')
             my_student_group[0].user_set.add(user)
+        else:
+            print('form not valid')
         return HttpResponseRedirect('studentlogin')
     return render(request, 'student/studentsignup.html', context=mydict)
 
