@@ -243,7 +243,7 @@ def gen(camera):
 
 def video_feed(request):
     return StreamingHttpResponse(
-        gen(VideoCamera(request.user.id)),
+        gen(VideoCamera(get_student(request.user))),
         content_type='multipart/x-mixed-replace; boundary=frame')
 
 
