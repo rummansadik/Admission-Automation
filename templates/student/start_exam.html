@@ -11,13 +11,19 @@
       margin-bottom: 0px !important;
       height: 318px;
     }
+    .my-custom-scrollbar {
+      position: relative;
+      width: 100%;
+      height: 600px;
+      overflow: auto;
+    }
   </style>
 </head>
 
 
 <div class="container">
   <div class="row">
-    <div class="col-8">
+    <div class="col-8 my-custom-scrollbar my-custom-scrollbar-primary">
       <form class="form" autocomplete="off" onsubmit="saveAns()" action="/student/calculate-marks" method="POST">
         {% csrf_token %}
         <h2 style="text-align: center;">Course Name: {{course.course_name}}</h2> <hr>
@@ -101,15 +107,22 @@
   </div>
 </div>
 
+<script>
+  var myCustomScrollbar = document.querySelector('.my-custom-scrollbar');
+  var ps = new PerfectScrollbar(myCustomScrollbar);
+  var scrollbarY = myCustomScrollbar.querySelector('.ps__rail-y');
+  myCustomScrollbar.onscroll = function () {
+    scrollbarY.style.cssText = `top: ${this.scrollTop}px!important; height: 600px; right: ${-this.scrollLeft}px`;
+  }
+</script>
 
 <script>
   var counter = 4;
-  // document.addEventListener("visibilitychange", function () {
-  //   // window.location.href = "{% url 'student-exam' %}"
-  //   counter--;
-  //   if(counter%2 == 0)
-  //     notifyMe();
-  // });
+  document.addEventListener("visibilitychange", function () {
+    counter--;
+    if(counter%2 == 0)
+      notifyMe();
+  });
 
   function notifyMe(){
     if( '{{ course.course_type }}' == 'Strict'){
@@ -163,8 +176,7 @@
     }
     
     else if( '{{ course.course_type }}' == 'Open Book'){
-      // Everything is allowe
-      alert
+      // Everything is allowed
     }
 
     else if( '{{ course.course_type }}' == 'Capture'){
