@@ -41,18 +41,26 @@ class VideoCamera(object):
             name = 'unknown'
             if pid == self.student.user_id:
                 name = self.student.get_name
+            
+            if(name is not 'unknown' and percentage >= 80):
+                percentage = round(percentage)
+                cv2.putText(
+                    image, name, (x, h+y-4),
+                    cv2.FONT_HERSHEY_DUPLEX,
+                    1, (0, 0, 255), 2
+                )
 
-            percentage = round(percentage)
-            cv2.putText(
-                image, name, (x, h+y-4),
-                cv2.FONT_HERSHEY_DUPLEX,
-                1, (0, 0, 255), 2
-            )
-
-            if(name != 'unknown' and percentage >= 80):
                 cv2.putText(image, 'predict: ' + str(percentage) + '%',
                     (25, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
             else:
+                percentage = round(percentage)
+                cv2.putText(
+                    image, 'Unknown', (x, h+y-4),
+                    cv2.FONT_HERSHEY_DUPLEX,
+                    1, (0, 0, 255), 2
+                )
+
                 cv2.putText(image, 'predict: ' + str(percentage) + '%',
                     (25, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
