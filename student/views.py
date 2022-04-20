@@ -6,10 +6,12 @@ from django.http import HttpResponseRedirect
 from django.http.response import StreamingHttpResponse
 from django.shortcuts import redirect, render
 from exam import models as QMODEL
+from student import train_image
 
 from student.train_dataset import *
 from student.train_camera import TrainCamera
 from student.video_camera import VideoCamera
+from student.train_image import *
 
 from . import forms, models
 
@@ -54,6 +56,7 @@ def get_student(user):
 @user_passes_test(is_student)
 def student_dashboard_view(request):
     current_student = get_student(request.user)
+    encode_image(current_student.profile_pic.path)
     dict = {
         'student': current_student,
         'total_course': QMODEL.Course.objects.all().count(),
