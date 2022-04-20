@@ -29,30 +29,34 @@ class VideoCamera(object):
         image = cv2.flip(image, 1)
 
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        gray = cv2.equalizeHist(gray)
+
         faces_detected = face_detection_videocam.detectMultiScale(
             gray, scaleFactor=1.3, minNeighbors=5, minSize=(100, 100))
-        for (x, y, w, h) in faces_detected:
-            cv2.rectangle(image, pt1=(x, y), pt2=(x + w, y + h),
-                          color=(255, 0, 0), thickness=2)
-            pid, percentage = self.recognizer.predict(gray[y:y+h, x:x+w])
+        
+        if len(faces_detected) == 1:
+            for (x, y, w, h) in faces_detected:
+                cv2.rectangle(image, pt1=(x, y), pt2=(x + w, y + h),
+                            color=(255, 0, 0), thickness=2)
+                pid, percentage = self.recognizer.predict(gray[y:y+h, x:x+w])
 
-            name = 'unknown'
-            if pid == self.student.user_id:
-                name = self.student.get_name
+                name = 'unknown'
+                if (pid is self.student.user_id):
+                    name = self.student.get_name
 
-            percentage = round(percentage)
-            cv2.putText(
-                image, name, (x, h+y-4),
-                cv2.FONT_HERSHEY_DUPLEX,
-                1, (0, 0, 255), 2
-            )
+                percentage = round(percentage)
+                cv2.putText(
+                    image, name, (x, h+y-4),
+                    cv2.FONT_HERSHEY_DUPLEX,
+                    1, (0, 0, 255), 2
+                )
 
-            if(name != 'unknown' and percentage >= 80):
-                cv2.putText(image, 'predict: ' + str(percentage) + '%',
-                            (25, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            else:
-                cv2.putText(image, 'predict: ' + str(percentage) + '%',
-                            (25, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                if((name is not 'unknown') and (percentage >= 80)):
+                    cv2.putText(image, 'predict: ' + str(percentage) + '%',
+                                (25, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                else:
+                    cv2.putText(image, 'predict: ' + str(percentage) + '%',
+                                (25, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
         ret, jpeg = cv2.imencode('.jpg', image)
         return jpeg.tobytes()
