@@ -7,8 +7,9 @@ from django.http.response import StreamingHttpResponse
 from django.shortcuts import redirect, render
 from exam import models as QMODEL
 
-from student.camera import *
 from student.train_dataset import *
+from student.train_camera import TrainCamera
+from student.video_camera import VideoCamera
 
 from . import forms, models
 
@@ -250,6 +251,6 @@ def video_feed(request):
 
 
 def train_feed(request):
-    values = gen(TrainModel(get_student(request.user)))
+    values = gen(TrainCamera(get_student(request.user)))
     return StreamingHttpResponse(values,
                                  content_type='multipart/x-mixed-replace; boundary=frame')
