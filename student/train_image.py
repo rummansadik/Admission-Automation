@@ -43,3 +43,11 @@ def encode_image(img_dir):
         # inp = json.load(jsonFile)
         # print(inp.get(user_id, []))
         # print(inp[user_id])
+
+def get_encoded_faces(user_id):
+    info = os.path.join(
+        settings.BASE_DIR, 'static\json', f'{user_id}.json')
+    jsonFile = open(info, 'r')
+    return json.load(jsonFile)
+
+
