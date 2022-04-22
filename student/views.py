@@ -38,6 +38,7 @@ def student_signup_view(request):
             student.save()
             my_student_group = Group.objects.get_or_create(name='STUDENT')
             my_student_group[0].user_set.add(user)
+            encode_image(student.profile_pic.path)        
         else:
             print('form not valid')
         return HttpResponseRedirect('studentlogin')
@@ -56,7 +57,6 @@ def get_student(user):
 @user_passes_test(is_student)
 def student_dashboard_view(request):
     current_student = get_student(request.user)
-    encode_image(current_student.profile_pic.path)
     dict = {
         'student': current_student,
         'total_course': QMODEL.Course.objects.all().count(),
