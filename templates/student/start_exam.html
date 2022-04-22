@@ -11,6 +11,7 @@
       margin-bottom: 0px !important;
       height: 318px;
     }
+
     .my-custom-scrollbar {
       position: relative;
       width: 100%;
@@ -20,13 +21,14 @@
   </style>
 </head>
 
-
 <div class="container">
   <div class="row">
     <div class="col-8 my-custom-scrollbar my-custom-scrollbar-primary">
-      <form class="form" autocomplete="off" onsubmit="saveAns()" action="/student/calculate-marks" method="POST">
+      <form class="form" name="examsheet" id="examsheet" autocomplete="off" onsubmit="saveAns()"
+        action="/student/calculate-marks" method="POST">
         {% csrf_token %}
-        <h2 style="text-align: center;">Course Name: {{course.course_name}}</h2> <hr>
+        <h2 style="text-align: center;">Course Name: {{course.course_name}}</h2>
+        <hr>
 
         {% for q in questions %}
         <div class="row">
@@ -72,7 +74,8 @@
           </label>
         </div>
 
-        <br> <hr>
+        <br>
+        <hr>
         {% endfor %}
 
 
@@ -86,14 +89,11 @@
           </div>
         </div>
 
-        
-        <textarea 
-          placeholder="Write your answer here..."
-          name="question{{ forloop.counter }}" 
-          id="question{{ forloop.counter }}" 
-          cols="50" rows="1"
-        ></textarea>
-        <br><br> <hr>
+
+        <textarea placeholder="Write your answer here..." name="question{{ forloop.counter }}"
+          id="question{{ forloop.counter }}" cols="50" rows="1"></textarea>
+        <br><br>
+        <hr>
         {% endfor %}
 
         <input type="hidden" id="unfocus" name="unfocus" value="0">
@@ -120,71 +120,71 @@
   var counter = 4;
   document.addEventListener("visibilitychange", function () {
     counter--;
-    if(counter%2 == 0)
+    if (counter % 2 == 0)
       notifyMe();
   });
 
-  function notifyMe(){
-    if( '{{ course.course_type }}' == 'Strict'){
-        window.location.href = "{% url 'expel' course.id %}";
+  function notifyMe() {
+    if ('{{ course.course_type }}' == 'Strict') {
+      window.location.href = "{% url 'expel' course.id %}";
     }
-    
-    else if( '{{ course.course_type }}' == 'Warning'){
-      if(counter == 2){
+
+    else if ('{{ course.course_type }}' == 'Warning') {
+      if (counter == 2) {
         alert("if you change your tab once more, you will expelled!");
-      }else{
+      } else {
         window.location.href = "{% url 'expel' course.id %}";
       }
     }
 
-    else if( '{{ course.course_type }}' == 'Notify'){
+    else if ('{{ course.course_type }}' == 'Notify') {
 
       let permission = Notification.permission;
-      if(permission === "granted") {   
+      if (permission === "granted") {
         showNotification();
-      } 
-      else if(permission === "default"){   
+      }
+      else if (permission === "default") {
         requestAndShowPermission();
         showNotification();
-      } 
-      else {  
+      }
+      else {
         alert("Get Alert");
       }
 
       function requestAndShowPermission() {
         Notification.requestPermission(function (permission) {
-            if (permission === "granted") {
-                  showNotification();
-            }
+          if (permission === "granted") {
+            showNotification();
+          }
         });
       }
 
-      function showNotification(){
+      function showNotification() {
 
         unfocus = document.getElementById('unfocus');
         let x = ((+unfocus.value) + 1);
         unfocus.value = x;
 
-        var title = "Alert";   
-        var body = "You have being spoted changing your tab.\nYou might be get expelled";   
-        var notification = new Notification('Alert', {body});   
-        notification.onclick = () => { 
+        var title = "Alert";
+        var body = "You have being spoted changing your tab.\nYou might be get expelled";
+        var notification = new Notification('Alert', { body });
+        notification.onclick = () => {
           notification.close();
           window.parent.focus();
         }
       }
     }
-    
-    else if( '{{ course.course_type }}' == 'Open Book'){
+
+    else if ('{{ course.course_type }}' == 'Open Book') {
       // Everything is allowed
     }
 
-    else if( '{{ course.course_type }}' == 'Capture'){
+    else if ('{{ course.course_type }}' == 'Capture') {
       alert("Capture");
       alert(counter);
     }
 
-    else if( '{{ course.course_type }}' == 'Record'){
+    else if ('{{ course.course_type }}' == 'Record') {
       alert("Record");
       alert(counter);
     }
@@ -212,6 +212,15 @@
   }
 </script>
 
+<script>
+  window.onload = function () {
+    window.setTimeout('submit_marks()', '{{time_remain}}');
+  };
 
+  function submit_marks() {
+    document.examsheet.submit();
+  }
+
+</script>
 
 {% endblock content %}

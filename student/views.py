@@ -87,7 +87,7 @@ def student_exam_view(request):
 
     course_list.reverse()
     context = {
-        'courses': course_list
+        'courses': course_list,
     }
 
     return render(request, 'student/student_exam.html', context)
@@ -133,6 +133,7 @@ def start_exam_view(request, pk):
         'course': course,
         'questions': questions,
         'shorts': shorts,
+        'time_remain': str(10000)
     }
 
     response = render(request, 'student/start_exam.html', context=context)
