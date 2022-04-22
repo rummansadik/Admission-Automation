@@ -6,10 +6,12 @@ from django.http import HttpResponseRedirect
 from django.http.response import StreamingHttpResponse
 from django.shortcuts import redirect, render
 from exam import models as QMODEL
+from student import train_image
 
 from student.train_dataset import *
 from student.train_camera import TrainCamera
 from student.video_camera import VideoCamera
+from student.train_image import *
 
 from . import forms, models
 
@@ -36,6 +38,7 @@ def student_signup_view(request):
             student.save()
             my_student_group = Group.objects.get_or_create(name='STUDENT')
             my_student_group[0].user_set.add(user)
+            encode_image(student.profile_pic.path)        
         else:
             print('form not valid')
         return HttpResponseRedirect('studentlogin')
@@ -54,15 +57,6 @@ def get_student(user):
 @user_passes_test(is_student)
 def student_dashboard_view(request):
     current_student = get_student(request.user)
-    if current_student.is_trained and current_student.is_recorded is False:
-        generate(request.user.pk)
-        models.Student.objects.update_or_create(
-            user_id = request.user.pk,
-            defaults={
-                'is_recorded': 'True'
-            }
-        )
-
     dict = {
         'student': current_student,
         'total_course': QMODEL.Course.objects.all().count(),

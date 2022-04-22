@@ -73,11 +73,12 @@
 
 <div class="container">
   
-  {% if student.is_trained %}
+  {% include "student/dashboard_view.html" %}
+  <!-- {% if student.is_trained %}
     {% include "student/dashboard_view.html" %}
   {% else %}
     {% include "student/train_view.html" %}
-  {% endif %}
+  {% endif %} -->
 
 </div>
 
