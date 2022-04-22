@@ -129,11 +129,15 @@ def start_exam_view(request, pk):
     if request.method == 'POST':
         pass
 
+    time_remain = course.end_at() - datetime.now()
+    time_remain = time_remain.total_seconds()
+    time_remain = time_remain * 1000
+
     context = {
         'course': course,
         'questions': questions,
         'shorts': shorts,
-        'time_remain': str(10000)
+        'time_remain': str(time_remain)
     }
 
     response = render(request, 'student/start_exam.html', context=context)
