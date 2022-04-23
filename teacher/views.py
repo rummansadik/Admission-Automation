@@ -12,6 +12,10 @@ from teacher import models as TMODEL
 from . import forms
 
 
+def get_teacher(user):
+    return TMODEL.Teacher.objects.get(user_id=user.pk)
+
+
 def teacherclick_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
@@ -58,8 +62,19 @@ def teacher_dashboard_view(request):
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
 def teacher_pending_students_view(request):
+
+    teacher = get_teacher(request.user)
+    pending = QMODEL.AnswerSheet.objects.filter(
+        is_evaluated=False,
+    )
+
+    pending_for_current_teacher = []
+    for answer in pending:
+        if answer.course.teacher_id == teacher.pk:
+            pending_for_current_teacher.append(answer)
+    
     context = {
-        'pending_students': QMODEL.AnswerSheet.objects.all().filter(is_evaluated=False)
+        'pending_students': pending_for_current_teacher
     }
 
     return render(request, 'teacher/pending_students.html', context=context)
@@ -143,9 +158,6 @@ def teacher_pending_student_answer_view(request, pk):
 def teacher_exam_view(request):
     return render(request, 'teacher/teacher_exam.html')
 
-
-def get_teacher(user):
-    return TMODEL.Teacher.objects.get(user_id=user.pk)
 
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
