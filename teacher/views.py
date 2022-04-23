@@ -7,6 +7,7 @@ from django.urls import reverse
 from exam import forms as QFORM
 from exam import models as QMODEL
 from student import models as SMODEL
+from teacher import models as TMODEL
 
 from . import forms
 
@@ -143,6 +144,9 @@ def teacher_exam_view(request):
     return render(request, 'teacher/teacher_exam.html')
 
 
+def get_teacher(user):
+    return TMODEL.Teacher.objects.get(user_id=user.pk)
+
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
 def teacher_add_exam_view(request):
@@ -150,7 +154,9 @@ def teacher_add_exam_view(request):
     if request.method == 'POST':
         courseForm = QFORM.CourseForm(request.POST)
         if courseForm.is_valid():
-            courseForm.save()
+            course = courseForm.save(commit=False)
+            course.teacher = get_teacher(request.user)
+            course.save()
         else:
             print("form is invalid")
         return HttpResponseRedirect('/teacher/teacher-view-exam')

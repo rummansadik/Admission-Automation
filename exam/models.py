@@ -4,6 +4,7 @@ from datetime import datetime
 from django.db import models
 from multiselectfield import MultiSelectField
 from student.models import Student
+from teacher.models import Teacher
 
 subject_choices = (
     ('CSE', 'CSE'),
@@ -36,6 +37,7 @@ class Course(models.Model):
         ('Record', 'Record'),
     ]
 
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     course_name = models.CharField(max_length=50)
     course_type = models.CharField(
         max_length=50,
@@ -43,8 +45,9 @@ class Course(models.Model):
         default='Strict'
     )
 
-    question_number = models.PositiveIntegerField()
-    total_marks = models.PositiveIntegerField()
+    total_students = models.PositiveIntegerField(default=0)
+    question_number = models.PositiveIntegerField(default=0)
+    total_marks = models.PositiveIntegerField(default=0)
 
     start_date = models.DateField()
     start_time = models.TimeField()
