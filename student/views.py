@@ -134,13 +134,14 @@ def start_exam_view(request, pk):
 
     timer = int(time_remain)
     time_remain = time_remain * 1000
+    time_remain = int(time_remain)
 
     context = {
         'course': course,
         'questions': questions,
         'shorts': shorts,
-        'time_remain': str(time_remain),
-        'timer': str(timer),
+        'time_remain': time_remain,
+        'timer': timer,
     }
 
     response = render(request, 'student/start_exam.html', context=context)
