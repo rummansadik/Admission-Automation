@@ -166,7 +166,8 @@ def teacher_add_exam_view(request):
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
 def teacher_view_exam_view(request):
-    courses = QMODEL.Course.objects.all()
+    teacher = get_teacher(request.user)
+    courses = QMODEL.Course.objects.filter(teacher_id=teacher.pk)
     return render(request, 'teacher/teacher_view_exam.html', {'courses': courses})
 
 
