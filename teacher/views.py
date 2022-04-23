@@ -7,8 +7,13 @@ from django.urls import reverse
 from exam import forms as QFORM
 from exam import models as QMODEL
 from student import models as SMODEL
+from teacher import models as TMODEL
 
 from . import forms
+
+
+def get_teacher(user):
+    return TMODEL.Teacher.objects.get(user_id=user.pk)
 
 
 def teacherclick_view(request):
@@ -57,8 +62,19 @@ def teacher_dashboard_view(request):
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
 def teacher_pending_students_view(request):
+
+    teacher = get_teacher(request.user)
+    pending = QMODEL.AnswerSheet.objects.filter(
+        is_evaluated=False,
+    )
+
+    pending_for_current_teacher = []
+    for answer in pending:
+        if answer.course.teacher_id == teacher.pk:
+            pending_for_current_teacher.append(answer)
+    
     context = {
-        'pending_students': QMODEL.AnswerSheet.objects.all().filter(is_evaluated=False)
+        'pending_students': pending_for_current_teacher
     }
 
     return render(request, 'teacher/pending_students.html', context=context)
@@ -150,7 +166,9 @@ def teacher_add_exam_view(request):
     if request.method == 'POST':
         courseForm = QFORM.CourseForm(request.POST)
         if courseForm.is_valid():
-            courseForm.save()
+            course = courseForm.save(commit=False)
+            course.teacher = get_teacher(request.user)
+            course.save()
         else:
             print("form is invalid")
         return HttpResponseRedirect('/teacher/teacher-view-exam')
@@ -160,7 +178,8 @@ def teacher_add_exam_view(request):
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
 def teacher_view_exam_view(request):
-    courses = QMODEL.Course.objects.all()
+    teacher = get_teacher(request.user)
+    courses = QMODEL.Course.objects.filter(teacher_id=teacher.pk)
     return render(request, 'teacher/teacher_view_exam.html', {'courses': courses})
 
 
@@ -227,7 +246,8 @@ def teacher_add_question_view(request):
 @login_required(login_url='teacherlogin')
 @user_passes_test(is_teacher)
 def teacher_view_question_view(request):
-    courses = QMODEL.Course.objects.all()
+    teacher = get_teacher(request.user)
+    courses = QMODEL.Course.objects.filter(teacher_id=teacher.pk)
     return render(request, 'teacher/teacher_view_question.html', {'courses': courses})
 
 

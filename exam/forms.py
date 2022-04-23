@@ -45,7 +45,17 @@ course_types = [
 class CourseForm(forms.ModelForm):
     class Meta:
         model = models.Course
-        fields = '__all__'
+        fields = [
+            'course_name',
+            'course_type',
+            'total_students',
+            'question_number',
+            'total_marks',
+            'start_date',
+            'start_time',
+            'end_date',
+            'end_time',
+        ]
         widgets = {
             'start_date': forms.DateInput(format='%d/%m/%Y'),
             'start_time': forms.TimeInput(format='%H:%M'),
