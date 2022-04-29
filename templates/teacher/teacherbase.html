@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 {% load static %}
+
 <html lang="en" dir="ltr">
 
 <head>
   <meta charset="utf-8">
- 
+
 
   <style media="screen">
     a:link {
@@ -14,7 +15,8 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: "Gill Sans", sans-serif;;
+      font-family: "Gill Sans", sans-serif;
+      ;
     }
 
     header {
@@ -39,7 +41,7 @@
 
     .logout_btn {
       padding: 5px;
-      background:#ef5350;
+      background: #ef5350;
       text-decoration: none;
       float: right;
       margin-top: -30px;
@@ -78,7 +80,7 @@
     .sidebar h4 {
       color: #ccc;
       margin-top: 0;
-      
+
     }
 
     .sidebar a {
@@ -94,8 +96,8 @@
     }
 
     .sidebar a:hover {
-      background:  #969696;
-      color:white;
+      background: #969696;
+      color: white;
     }
 
     .sidebar i {
@@ -157,12 +159,10 @@
 </head>
 
 <body>
-
   <input type="checkbox" id="check">
-  <!--header area start-->
   <header>
     <label for="check">
-      <i style="left: 200px;margin-top: 17px;"class="fas fa-bars" id="sidebar_btn"></i>
+      <i style="left: 200px;margin-top: 17px;" class="fas fa-bars" id="sidebar_btn"></i>
     </label>
     <div class="left_area">
       <h3>Online Exam</h3>
@@ -171,36 +171,26 @@
       <a href="/logout" class="logout_btn">Logout</a>
     </div>
   </header>
-  <!--header area end-->
-  <!--sidebar start-->
+
   <div class="sidebar">
     <center>
-
-      <img src="{% static "image/teacher.png" %}" class="profile_image" alt="">
+      <img src="{% static 'image/teacher.png' %}" class="profile_image">
       <h4>{{request.user.first_name}}</h4>
       <h6 style="color: rgb(255, 255, 255);">( Teacher )</h6>
-
     </center>
 
     <a href="/teacher/teacher-dashboard"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
     <a href="/teacher/teacher-exam"><i class="fas fa-book"></i><span>Manage Courses</span></a>
     <a href="/teacher/teacher-question"><i class="fas fa-question-circle"></i><span>Manage Questions</span></a>
+    <a href="/teacher/exam-room"><i class="fas fa-stream"></i><span>Exam Room</span></a>
   </div>
-  <!--sidebar end-->
 
-
-  <!--content start-->
   <div class="content">
     <br><br><br><br><br>
     {% block content %}
-
     {% endblock content %}
 
-
-    <br><br><br>
     {% include "exam/footer.html" %}
   </div>
-  <!--content end-->
 </body>
-
 </html>

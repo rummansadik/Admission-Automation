@@ -10,6 +10,8 @@ from student import models as SMODEL
 from teacher import models as TMODEL
 
 from . import forms
+from datetime import datetime
+
 
 
 def get_teacher(user):
@@ -264,3 +266,30 @@ def remove_question_view(request, pk):
     question = QMODEL.Question.objects.get(id=pk)
     question.delete()
     return HttpResponseRedirect(reverse('teacher-view-question'))
+
+
+@login_required(login_url='teacherlogin')
+@user_passes_test(is_teacher)
+def exam_room(request):
+    teacher = get_teacher(request.user)
+    courses = QMODEL.Course.objects.filter(teacher_id=teacher.pk)
+
+    course_list = []
+    time = datetime.now()
+
+    for course in courses:
+        if course.end_at() < time:
+            pass
+        elif course.start_at() > time:
+            pass
+        else:
+            course_list.append(course)
+
+    return render(request, 'teacher/exam_room.html', {'courses': course_list})
+
+
+@login_required(login_url='teacherlogin')
+@user_passes_test(is_teacher)
+def running_exam(request, pk):
+    course = QMODEL.Course.objects.get(id=pk)
+    return render(request, 'teacher/running_exam.html', {'course': course})

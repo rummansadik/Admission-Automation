@@ -44,8 +44,8 @@
         <td>{{t.course_name}}</td>
         <td>{{t.question_number}}</td>
         <td>{{t.total_marks}}</td>
-        <td>{{t.start_at|date:"H:i - d/m/Y"}}</td>
-        <td>{{t.end_at|date:"H:i - d/m/Y"}}</td>
+        <td>{{t.start_at|date:"P - d/m/Y"}}</td>
+        <td>{{t.end_at|date:"P - d/m/Y"}}</td>
 
         <td><a class="btn btn-danger btn-xs" style="border-radius: 0%;" href="{% url 'delete-course' t.id  %}"><span
               class="glyphicon glyphicon-trash"></span></a></td>
