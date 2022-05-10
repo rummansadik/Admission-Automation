@@ -142,11 +142,11 @@ EMAIL_HOST_USER = 'from@gmail.com'  # this email will be used to send emails
 EMAIL_HOST_PASSWORD = 'ENTER_PASSWORD'  # host email password required
 # now sign in with your host gmail account in your browser
 # open following link and turn it ON
-# https://myaccount.google.com/lesssecureapps
+
 # otherwise you will get SMTPAuthenticationError at /contactus
 # this process is required because google blocks apps authentication by default
 # email on which you will receive messages sent from website
-EMAIL_RECEIVING_USER = ['to@gmail.com']
+EMAIL_RECEIVING_USER = ['matkhan01@gmail.com']
 
 # Django-Resized
 DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]

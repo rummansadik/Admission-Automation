@@ -1,17 +1,20 @@
 from datetime import datetime
 
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.http.response import StreamingHttpResponse
 from django.shortcuts import redirect, render
 from exam import models as QMODEL
-from student import train_image
 
-from student.train_dataset import *
+from student import train_image
 from student.train_camera import TrainCamera
-from student.video_camera import VideoCamera
+from student.check_camera import CheckCamera
+from student.train_dataset import *
 from student.train_image import *
+from student.video_camera import VideoCamera
+from student.models import Student as sdb
 
 from . import forms, models
 
@@ -22,8 +25,8 @@ def studentclick_view(request):
     return render(request, 'student/studentclick.html')
 
 
-def student_signup_view(request): 
-    userForm = forms.StudentUserForm() 
+def student_signup_view(request):
+    userForm = forms.StudentUserForm()
     studentForm = forms.StudentForm()
     mydict = {'userForm': userForm, 'studentForm': studentForm}
     if request.method == 'POST':
@@ -38,7 +41,7 @@ def student_signup_view(request):
             student.save()
             my_student_group = Group.objects.get_or_create(name='STUDENT')
             my_student_group[0].user_set.add(user)
-            encode_image(student.profile_pic.path)        
+            encode_image(student.profile_pic.path)
         else:
             print('form not valid')
         return HttpResponseRedirect('studentlogin')
@@ -55,14 +58,36 @@ def get_student(user):
 
 @login_required(login_url='studentlogin')
 @user_passes_test(is_student)
+def student_check_view(request):
+    return redirect('student-dashboard')
+
+
+@login_required(login_url='studentlogin')
+@user_passes_test(is_student)
 def student_dashboard_view(request):
     current_student = get_student(request.user)
+
     dict = {
         'student': current_student,
         'total_course': QMODEL.Course.objects.all().count(),
         'total_question': QMODEL.Question.objects.all().count(),
     }
+
     return render(request, 'student/student_dashboard.html', context=dict)
+
+
+@login_required(login_url='studentlogin')
+@user_passes_test(is_student)
+def student_logout_view(request):
+    current_student = get_student(request.user)
+    sdb.objects.update_or_create(
+        user_id=current_student.user_id,
+        defaults={
+            'is_trained': 'False'
+        }
+    )
+    logout(request)
+    return redirect('/')
 
 
 @login_required(login_url='studentlogin')
@@ -255,5 +280,10 @@ def video_feed(request):
 
 def train_feed(request):
     values = gen(TrainCamera(get_student(request.user)))
+    return StreamingHttpResponse(values,
+                                 content_type='multipart/x-mixed-replace; boundary=frame')
+
+def check_feed(request):
+    values = gen(CheckCamera(get_student(request.user)))
     return StreamingHttpResponse(values,
                                  content_type='multipart/x-mixed-replace; boundary=frame')

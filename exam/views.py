@@ -30,7 +30,7 @@ def is_student(user):
 
 def afterlogin_view(request):
     if is_student(request.user):
-        return redirect('student/student-dashboard')
+        return redirect('student/student-check')
 
     elif is_teacher(request.user):
         accountapproval = TMODEL.Teacher.objects.all().filter(
